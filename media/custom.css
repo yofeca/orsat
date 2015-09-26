@@ -1,0 +1,34 @@
+header.container-fluid{ padding-top: 0; padding-bottom: 0; }
+.navbar-nav > li{ border-right: 1px solid #ddd; }
+.navbar-nav > li:first-child{ border-left: 1px solid #ddd; }
+.navbar-nav > li:hover{ background: #080808; }
+.navbar-nav > li a{ text-align: center; }
+.navbar-nav > li.selected{ background: #080808 !important; }
+
+.dropdown-menu > li a{ text-align: left; }
+
+#dt-wrapper_length > label select { display: inline; width: 60px; margin-left: 10px; margin-right: 10px; }
+#dt-wrapper_filter > label{ float: right; }
+#dt-wrapper_filter > label input{ display: inline; width: 260px; margin-left: 10px; }
+
+.chosen-container-single{ width: 260px !important; }
+
+.panel{ border-radius: 0 !important; margin-bottom: 0 !important; }
+#panel-table .panel-heading{ display: none; }
+
+.page-login footer{ display: none; }
+footer{ margin-top: 30px; padding: 15px; background: #ddd; }
+footer p{ background: transparent !important; border: 0 !important; }
+
+.qaqc ul{ padding-left: 0; }
+.qaqc ul li{ list-style: none; }
+.qaqc ul li .col-sm-7{ border: 1px solid #ddd; }
+
+.wrapper.container-fluid{ min-height: 600px; }
+
+.err-filter{ background: rgba(255,0,0,.3) !important;}
+
+#content-box-left{ background: #ccc; }
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th{ padding: 4px 8px !important;}
+

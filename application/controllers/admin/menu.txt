@@ -1,0 +1,7 @@
+	if($this->user_validation->validate("[[controller]]", "index", false)){
+		?>
+		<li <?php if($controller=="[[controller]]"){ echo "class='selected'"; } ?> onclick='self.location="<?php echo site_url("[[controller]]");?>"'>
+			<a href='<?php echo site_url("[[controller]]");?>'>[[display]]</a>
+		</li>
+		<?php
+	}

@@ -1,0 +1,11 @@
+.app-search:before {
+  content: "\f002";
+  position: absolute;
+  left: 12px;
+  font-family: FontAwesome;
+  cursor: pointer;
+  top: 7px;
+  color: #c4c4cd;
+  display: inline-block;
+}
+

@@ -1,0 +1,23 @@
+@media print {
+	body,table,td,tr{ margin: 0; padding: 0;}
+	.list th, .list td{ border-style: none; }
+    #buttons,
+    #thumbnails,
+    #header,
+    #menus,
+    .footer,
+    #img-loading,
+    #imagepreload{
+    	display: none;
+    }
+	
+	#img-loader{
+		margin: 0; padding 0;
+	}
+	#img-loader img{
+		width: 100%;
+	}
+	#container{
+		border-style: none;
+	}
+}
