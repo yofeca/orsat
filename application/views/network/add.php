@@ -70,7 +70,7 @@ function deleteRecord(co_id){
 	}
 }
 
-function deleteAllRecord(co_id){
+function removeAllRecords(co_id){
 
 	var e = '<?php echo $event; ?>';
 	console.log(co_id);
@@ -91,13 +91,13 @@ function deleteAllRecord(co_id){
 			data = JSON.stringify(formdata);
 			id = co_id.replace('target-','');
 			jQuery.ajax({
-				url: "<?php echo site_url(); echo $controller ?>/cajax_delete_all_tceq_component/"+'<?php echo $record['id']; ?>',
+				url: "<?php echo site_url(); echo $controller ?>/ajax_remove_all_target_component/"+'<?php echo $record['id']; ?>',
 				type: "POST",
 				data: formdata,
 				dataType: "json",
 				success: function(){
 					$("#list-item-"+co_id).fadeOut(200);
-					self.location = "<?php echo site_url(); echo $controller ?>";
+					self.location = "<?php echo site_url(); echo $controller ?>/edit/<?php echo $network_id; ?>";
 				}
 			});
 		}
@@ -118,7 +118,7 @@ function deleteAllRecord(co_id){
 			update: function(){
 				var data = $(this).sortable('serialize');
 				$.post(
-					'<?php echo site_url(); ?><?php echo $controller; ?>/ajax_target_component_sortable',
+					'<?php echo site_url(); ?><?php echo $controller; ?>/ajax_target_component_sortable/<?php echo $network_id; ?>',
 					{'data':data}
 				);
 			}
@@ -127,7 +127,7 @@ function deleteAllRecord(co_id){
 			update: function(){
 				var data = $(this).sortable('serialize');
 				$.post(
-					'<?php echo site_url(); ?><?php echo $controller; ?>/ajax_target_component_sortable',
+					'<?php echo site_url(); ?><?php echo $controller; ?>/ajax_target_component_sortable/<?php echo $network_id; ?>',
 					{'data':data}
 				);
 			}
@@ -146,9 +146,9 @@ function deleteAllRecord(co_id){
 			$("#list-item-"+co_id).remove();
 		}else{
 			if(confirm("Are you sure you want to delete this record?")){
-				formdata = "id="+co_id;
+				formdata = "aid="+co_id
 				jQuery.ajax({
-					url: "<?php echo site_url(); echo $controller ?>/ajax_delete_target_component/"+co_id,
+					url: "<?php echo site_url(); echo $controller ?>/ajax_remove_target_component/<?php echo $network_id; ?>",
 					type: "POST",
 					data: formdata,
 					dataType: "json",
@@ -240,20 +240,20 @@ function deleteAllRecord(co_id){
 					<div class="panel-body">
 						<div class="col-sm-6">
 							<div class="panel panel-default">
-								<div class="panel-heading">Channel A Components <!--button class="btn btn-default btn-sm pull-right" style="margin-top: -6px" id="add-a" data-toggle="modal" data-target="#add-compound-sortable-a">Add</button--></div>
+								<div class="panel-heading">Channel A Components <?php if($network_id){ ?> <button class="btn btn-default btn-sm pull-right" style="margin-top: -6px" id="add-a" data-toggle="modal" data-target="#add-compound-sortable-a">Add</button><?php } ?></div>
 								<div class="panel-body">
 									<ul id="sortable-a" class="sortable">
 										<?php
 										$t = count($target_a);
 										for($i=0; $i<$t; $i++){
 										?>
-											<li id="list-item-<?php echo htmlentitiesX($target_a[$i]['ntc_id']); ?>" class="list-items">
+											<li id="list-item-<?php echo htmlentitiesX($target_a[$i]['id']); ?>" class="list-items">
 												<input type="checkbox" value="<?php echo htmlentitiesX($target_a[$i]['id']); ?>" name="target_a" id="target_a-<?php echo $target_a[$i]['id'];?>" style="float: left; margin-right: 5px; margin-top: 0;">
 												<i class="fa fa-bars pull-left" style="cursor: grab"></i> 
 												<div class="description"><?php echo $target_a[$i]['component_name']; ?></div>
 												<div class="options">
-													<a style='color: red; cursor:pointer; text-decoration: underline' onclick='removeTCEQ("<?php echo htmlentitiesX($target_a[$i]['ntc_id']) ?>"); ' ><i class="fa fa-trash-o"></i></a>
-													<a href="<?php echo site_url(); ?>airs_list/edit/<?php echo (isset($target_a[$i]['airs_list_id'])) ? $target_a[$i]['airs_list_id'] : $target_a[$i]['id']; ?>" ><i class="fa fa-pencil-square-o"></i></a>
+													<a style='color: red; cursor:pointer; text-decoration: underline' onclick='removeTCEQ("<?php echo htmlentitiesX($target_a[$i]['id']) ?>"); ' ><i class="fa fa-trash-o"></i></a>
+													<a href="<?php echo site_url(); ?>airs_list/edit/<?php echo (isset($target_a[$i]['id'])) ? $target_a[$i]['id'] : $target_a[$i]['id']; ?>" ><i class="fa fa-pencil-square-o"></i></a>
 												</div>
 												
 											</li>
@@ -263,26 +263,26 @@ function deleteAllRecord(co_id){
 									</ul>
 								</div>
 								<div class="panel-footer">
-									<input type="checkbox" class="target-check-all" id="check-all-target_a" style="float: left; margin-right: 5px;"> Check All
-									<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("target_a"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
+									<input type="checkbox" class="check-all" id="check-all-target_a" style="float: left; margin-right: 5px;"> Check All
+									<a style='color: red; cursor:pointer; text-decoration: none' onclick='removeAllRecords("target_a"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
 								</div>
 							</div><!--/.panel-->
 						</div><!--/.col-sm-6-->
 						<div class="col-sm-6">
 							<div class="panel panel-default">
-								<div class="panel-heading">Channel B Components <!--button class="btn btn-default btn-sm pull-right" style="margin-top: -6px" id="add-b" data-toggle="modal" data-target="#add-compound-sortable-b">Add</button--></div>
+								<div class="panel-heading">Channel B Components <?php if($network_id){ ?> <button class="btn btn-default btn-sm pull-right" style="margin-top: -6px" id="add-b" data-toggle="modal" data-target="#add-compound-sortable-b">Add</button> <?php } ?></div>
 								<div class="panel-body">
 									<ul id="sortable-b" class="sortable">
 										<?php
 										$t = count($target_b);
 										for($i=0; $i<$t; $i++){
 										?>
-											<li id="list-item-<?php echo htmlentitiesX($target_b[$i]['ntc_id']); ?>" class="list-items">
+											<li id="list-item-<?php echo htmlentitiesX($target_b[$i]['id']); ?>" class="list-items">
 												<input type="checkbox" value="<?php echo htmlentitiesX($target_b[$i]['id']); ?>" name="target_b" id="target_b-<?php echo $target_b[$i]['id'];?>" style="float: left; margin-right: 5px; margin-top: 0;">
 												<i class="fa fa-bars pull-left" style="cursor: grab"></i> 
 												<div class="description"><?php echo $target_b[$i]['component_name']; ?></div>
 												<div class="options">
-													<a style='color: red; cursor:pointer; text-decoration: underline' onclick='removeTCEQ("<?php echo htmlentitiesX($target_b[$i]['ntc_id']) ?>"); ' ><i class="fa fa-trash-o"></i></a>
+													<a style='color: red; cursor:pointer; text-decoration: underline' onclick='removeTCEQ("<?php echo htmlentitiesX($target_b[$i]['id']) ?>"); ' ><i class="fa fa-trash-o"></i></a>
 													<a href="<?php echo site_url(); ?>airs_list/edit/<?php echo $target_b[$i]['id']?>" ><i class="fa fa-pencil-square-o"></i></a>
 												</div>
 												
@@ -293,8 +293,8 @@ function deleteAllRecord(co_id){
 									</ul>
 								</div>
 								<div class="panel-footer">
-									<input type="checkbox" class="target-check-all" id="check-all-target_b" style="float: left; margin-right: 5px;"> Check All
-									<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("target_b"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
+									<input type="checkbox" class="check-all" id="check-all-target_b" style="float: left; margin-right: 5px;"> Check All
+									<a style='color: red; cursor:pointer; text-decoration: none' onclick='removeAllRecords("target_b"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
 								</div>
 							</div><!--/.panel-->
 						</div><!--/.col-sm-6-->
@@ -330,14 +330,13 @@ function deleteAllRecord(co_id){
 			<div class="modal-body">
 
 				<ul class="list-group">
-					<li class="list-group-item"><input type="checkbox" class="check-all-a"> Check all</li>
+					<li class="list-group-item"><input type="checkbox" class="check-all" id="check-all-a"> Check all</li>
 					<?php 
 						$t = count($tceq_a);
-						print_r($tceq_a);
 						for($i=0; $i<$t; $i++){
 							?>
 							<li class="list-group-item">
-								<input type="checkbox" name="li-a" id="li-a-<?php echo $tceq_a[$i]['tceq_id']?>" value="<?php echo $tceq_a[$i]['tceq_id'] ."-" . $tceq_a[$i]['sort']; ?>">
+								<input type="checkbox" name="li-a" id="li-a-<?php echo $tceq_a[$i]['id']?>" value="<?php echo $tceq_a[$i]['id'] ."-" . $tceq_a[$i]['sort']; ?>">
 								<?php echo $tceq_a[$i]['aqi_no'] . ' - ' .$tceq_a[$i]['component_name']; ?>
 							</li>
 							<?php
@@ -364,14 +363,14 @@ function deleteAllRecord(co_id){
 			<div class="modal-body">
 
 				<ul class="list-group">
-					<li class="list-group-item"><input type="checkbox" class="check-all-b"> Check all</li>
-					<?php 
+					<li class="list-group-item"><input type="checkbox" class="check-all" id="check-all-b"> Check all</li>
+					<?php
 						$t = count($tceq_b);
 
 						for($i=0; $i<$t; $i++){
 							?>
 							<li class="list-group-item">
-								<input type="checkbox" name="li-b" id="li-b-<?php echo $tceq_b[$i]['tceq_id']?>" value="<?php echo $tceq_b[$i]['tceq_id'] ."-" . $tceq_b[$i]['sort']; ?>">
+								<input type="checkbox" name="li-b" id="li-b-<?php echo $tceq_b[$i]['id']?>" value="<?php echo $tceq_b[$i]['id'] ."-" . $tceq_b[$i]['sort']; ?>">
 								<?php echo $tceq_b[$i]['aqi_no'] . ' - ' .$tceq_b[$i]['component_name']; ?>
 							</li>
 							<?php
@@ -388,9 +387,15 @@ function deleteAllRecord(co_id){
 </div><!-- /#add-compound-b -->
 
 <script>
-	$('.target-check-all').on("click", function(){
+	$('.check-all').on("click", function(){
 		var id = $(this).attr('id').replace('check-all-','');
-		$('input[name="'+id+'"]').prop('checked', ! $('input[name="'+id+'"]').is(':checked'));
+		console.log(id);
+		if(id=='target_a' || id=='target_b'){
+			$('input[name="'+id+'"]').prop('checked', ! $('input[name="'+id+'"]').is(':checked'));
+		}
+		else{
+			$('input[name="li-'+id+'"]').prop('checked', ! $('input[name="li-'+id+'"]').is(':checked'));
+		}
 	});
 	$('.check-all-a').on("click", function(){
 		$('input[name="sortable-a"]').prop('checked',$(this).is(':checked'));
@@ -400,15 +405,28 @@ function deleteAllRecord(co_id){
 	});
 
 	$('#savea').on("click", function(){
-		var chVal = $('input[name="sortable-a"]:checked').map(function(){
+		var chVal = $('input[name="li-a"]:checked').map(function(){
 			return $(this).val();
 		}).get();
+		console.log(chVal);
 
+		addTargetComponents(chVal);
 	});
 	$('#saveb').on("click", function(){
-		var chVal = $('input[name="sortable-b"]:checked').map(function(){
+		var chVal = $('input[name="li-b"]:checked').map(function(){
 			return $(this).val();
 		}).get();
+		console.log(chVal);
 
+		addTargetComponents(chVal);
 	});
+
+	function addTargetComponents(chVal){
+		$.post(
+			'<?php echo site_url(); echo $controller; ?>/ajax_add_target_components/<?php echo $network_id; ?>',
+			{'data':chVal}
+		).done(function(){
+			self.location = "<?php echo site_url(); echo $controller ?>/edit/<?php echo $network_id; ?>";
+		});
+	}
 </script>

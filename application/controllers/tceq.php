@@ -71,7 +71,7 @@ class tceq extends CI_Controller {
 		}
 		
 		$id = db_escape($id);
-		$sql = "delete from `".$table."` where id = '".$id."' limit 1";
+		$sql = "DELETE FROM `".$table."` WHERE airs_list_id = '".$id."' LIMIT 1";
 		$q = $this->db->query($sql);
 		
 		return true;
@@ -88,7 +88,7 @@ class tceq extends CI_Controller {
 		$t = count($data);
 
 		for($i=0; $i<$t; $i++){
-			$sql = "DELETE FROM `$table` WHERE id = '".$data[$i]."' AND channel='".strtoupper($id[1])."' LIMIT 1";
+			$sql = "DELETE FROM `$table` WHERE airs_list_id = '".$data[$i]."' AND channel='".strtoupper($id[1])."' LIMIT 1";
 			$q = $this->db->query($sql);
 		}	
 		return true;

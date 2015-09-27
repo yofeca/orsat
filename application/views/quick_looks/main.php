@@ -1,6 +1,20 @@
 <script>
-	$(document).ready(function(){
+$(document).ready(function(){
 	var view =  "<?php echo $_GET['v'] ?>";
+
+	if(!$(this).prop('checked')){
+		$('#myChart-a').fadeOut(200);
+		$('#myChart-b').fadeOut(200);
+	}
+	$('input[name="toggle-chart"]').on('click',function(){
+		if($(this).prop('checked')){
+			$('#myChart-a').fadeIn(200);
+			$('#myChart-a').fadeIn(200);
+		}else{
+			$('#myChart-a').fadeOut(200);
+			$('#myChart-b').fadeOut(200);
+		}
+	});
 
 	$('select[name="decimal-place"]').change(function(){
 		
@@ -8,8 +22,13 @@
 
 		$('.value').each(function(){
 			var da = parseFloat($(this).data("value"));
+			var old_val = $(this).data("value");
 			if(d!=''){
-				$(this).html(da.toFixed(d));
+				if(!isNaN(da)){
+					$(this).html(da.toFixed(d));
+				}else{
+					$(this).html(old_val);
+				}
 			}else{
 				$(this).html(da);
 			}
@@ -145,11 +164,13 @@
 });
 </script>
 <style>
-	#quicklooka td, #quicklookb td{ padding: 2px 4px;}
+	#quicklooka td, #quicklookb td{ padding: 2px 4px !important;}
 	.cvs{ background: #D4D4FF; }
 	.lcs{ background: #BBE5E5; }
 	.blank{ background: #E1E1E1; }
+	.rts{ background: #00FFDD; }
 	.text-center{ text-align: center; }
+	.table{ white-space: nowrap; }
 	.table td{ font-size: 12px; }
 	.table th{ font-weight: bold;}
 </style>
@@ -158,8 +179,11 @@
 <div class="panel-body">
 <!-- Panel wrapper -->
 	<div class="container-fluid">
-		<div id="filters" class="pull-right col-sm-6">
-			<div class="col-sm-6">
+		<div id="filters" class="pull-right col-sm-7">
+			<div class="col-sm-3">
+					<input type="checkbox" name="toggle-chart"/> Show Charts:
+			</div>
+			<div class="col-sm-5">
 				<label class="col-sm-6 control-label">Decimal Place: </label>
 				<div class="col-sm-6">
 					<select name="decimal-place" class="">
@@ -171,7 +195,8 @@
 					</select>
 				</div>
 			</div>
-			<div class="col-sm-6">
+
+			<div class="col-sm-4">
 				<label class="col-sm-6 control-label">View: </label>
 				<div class="col-sm-6">
 					<select name="view" class="">
@@ -230,6 +255,7 @@
 							$lfn = stripos(substr($filename,-5,1), 'e');
 							$cfn = stripos(substr($filename,-5,1), 'c');
 							$bfn = stripos(substr($filename,-5,1), 'b');
+							$rfn = stripos(substr($filename,-5,1), 'q');
 
 							if($lfn>-1)
 								$standard = 'lcs';
@@ -237,6 +263,8 @@
 								$standard = 'cvs';
 							else if($bfn>-1)
 								$standard = 'blank';
+							else if($rfn>-1)
+								$standard = 'rts';
 							else
 								$standard = '';
 
@@ -352,6 +380,7 @@
 							$lfn = stripos(substr($filename,-5,1), 'e');
 							$cfn = stripos(substr($filename,-5,1), 'c');
 							$bfn = stripos(substr($filename,-5,1), 'b');
+							$rfn = stripos(substr($filename,-5,1), 'q');
 
 							if($lfn>-1)
 								$standard = 'lcs';
@@ -359,6 +388,8 @@
 								$standard = 'cvs';
 							else if($bfn>-1)
 								$standard = 'blank';
+							else if($rfn>-1)
+								$standard = 'rts';
 							else
 								$standard = '';
 
@@ -444,244 +475,233 @@
 		?>
 		<style type="text/css">
 			.lcs-report th,.lcs-report th{ font-size: 13px !important; }
-			.lcs-info li{ list-style: none; }
+			.lcs-info li{ list-style: none; display: inline; }
 		</style>
 
 		<div class="panel panel-default">
-		<div class="panel-heading">LCS Concentration (<?php echo $lcs_info['site_name']; ?>)</div>
-		<div class="panel-body">
-
-		<div class="col-sm-12 lcs-info">
-			<ul>
-				<li><b>Cylinder:</b> <?php echo $lcs_info['cylinder']; ?></li>
-				<li><b>Date On:</b> <?php echo $lcs_info['date_on']; ?></li>
-				<li><b>Date Off:</b> <?php echo $lcs_info['date_off']; ?></li>
-				<li><b>Dilution Factor:</b> <?php echo $lcs_info['dilution_factor']; ?></li>
-			</ul>
-		</div>
-
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">Channel A</div>
-				<div class="panel-body">
-					<div class="table-responsive">
-						<table class="table lcs-report">
-							<tr>
-								<th>CARBON #</th>
-								<th>Name</th>
-								<th>Alias</th>
-								<th>Standard Concentration (PPM VOL)</th>
-								<th>CALCULATED DILUTED CONCENTRATION (PPBC)</th>
-								<th>STATUS</th>
-							</tr>
-							<?php 
-								for($i=0; $i<$lcsa_total; $i++){
-									if($lcs_concentration[0][$i]['channel']=="A"){
-									
-									$carbon = $lcs_concentration[0][$i]['carbon_no'];
-									$method_name = $lcs_concentration[0][$i]['method_name'];
-									$concentration = $lcs_concentration[0][$i]['std_value'];
-									$amount = $lcs_concentration[0][$i]['Amount'];
-									$min = $lcs_concentration[0][$i]['min'];
-									$max = $lcs_concentration[0][$i]['max'];
-
-									$ppbc = $concentration * $lcs_info['dilution_factor'] * $carbon * 1000;
-									$r = ($ppbc>0) ? ($amount / $ppbc * 100 ) : 0;
-									
-							?>
-									<tr>
-										<td><?php echo $lcs_concentration[0][$i]['carbon_no']; ?></td>
-										<td><?php echo $lcs_concentration[0][$i]['method_name']; ?></td>
-										<td><?php echo $lcs_concentration[0][$i]['alias']; ?></td>
-										<td><?php echo $lcs_concentration[0][$i]['std_value']; ?></td>
-										<td><?php echo number_format((float) $ppbc, 2, '.', ''); ?></td>
-										<td><?php echo ( $r<$min || $r>$max ) ? 'F' : 'P'; ?></td>
-									</tr>
-								<?php
-									}//channel-a condition
-								}//channel-a loop
-							?>
-						</table>
-					</div>
+			<div class="panel-heading">LCS Concentration</div>
+			<div class="panel-body">
+				<div class="col-sm-12 lcs-info">
+					<ul>
+						<li><b>Cylinder:</b> <?php echo $lcs_info['cylinder']; ?></li>
+						<li><b>Date On:</b> <?php echo $lcs_info['date_on']; ?></li>
+						<li><b>Date Off:</b> <?php echo $lcs_info['date_off']; ?></li>
+						<li><b>Dilution Factor:</b> <?php echo $lcs_info['dilution_factor']; ?></li>
+					</ul>
 				</div>
+
+				<div class="col-md-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">Channel A</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table class="table lcs-report">
+									<tr>
+										<th>CARBON #</th>
+										<th>Name</th>
+										<th>Alias</th>
+										<th>PPM VOL</th>
+										<th>PPBC</th>
+										<th>STATUS</th>
+									</tr>
+									<?php 
+										for($i=0; $i<$lcsa_total; $i++){
+											if($lcs_concentration[0][$i]['channel']=="A"){
+											
+											$carbon = $lcs_concentration[0][$i]['carbon_no'];
+											$method_name = $lcs_concentration[0][$i]['method_name'];
+											$concentration = $lcs_concentration[0][$i]['std_value'];
+											$amount = $lcs_concentration[0][$i]['Amount'];
+											$min = $lcs_concentration[0][$i]['min'];
+											$max = $lcs_concentration[0][$i]['max'];
+
+											$ppbc = $concentration * $lcs_info['dilution_factor'] * $carbon * 1000;
+											$r = ($ppbc>0) ? ($amount / $ppbc * 100 ) : 0;
+											
+									?>
+											<tr>
+												<td><?php echo $lcs_concentration[0][$i]['carbon_no']; ?></td>
+												<td><?php echo $lcs_concentration[0][$i]['method_name']; ?></td>
+												<td><?php echo $lcs_concentration[0][$i]['alias']; ?></td>
+												<td><?php echo $lcs_concentration[0][$i]['std_value']; ?></td>
+												<td><?php echo number_format((float) $ppbc, 2, '.', ''); ?></td>
+												<td><?php echo ( $r<$min || $r>$max ) ? 'F' : 'P'; ?></td>
+											</tr>
+										<?php
+											}//channel-a condition
+										}//channel-a loop
+									?>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div><!--lcs-col-sm-6-->
+
+				<div class="col-md-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">Channel B</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table class="table lcs-report">
+									<tr>
+										<th>CARBON #</th>
+										<th>Name</th>
+										<th>Alias</th>
+										<th>PPM VOL</th>
+										<th>PPBC</th>
+										<th>STATUS</th>
+									</tr>
+									<?php 
+										for($i=0; $i<$lcsb_total; $i++){
+											if($lcs_concentration[1][$i]['channel']=="B"){
+											
+											$carbon = $lcs_concentration[1][$i]['carbon_no'];
+											$method_name = $lcs_concentration[1][$i]['method_name'];
+											$concentration = $lcs_concentration[1][$i]['std_value'];
+											$amount = $lcs_concentration[1][$i]['Amount'];
+											$min = $lcs_concentration[1][$i]['min'];
+											$max = $lcs_concentration[1][$i]['max'];
+
+											$ppbc = $concentration * $lcs_info['dilution_factor'] * $carbon *1000;
+											$r = ($ppbc>0) ? ($amount / $ppbc * 100 ) : 0;
+											
+									?>
+											<tr>
+												<td><?php echo $lcs_concentration[1][$i]['carbon_no']; ?></td>
+												<td><?php echo $lcs_concentration[1][$i]['method_name']; ?></td>
+												<td><?php echo $lcs_concentration[1][$i]['alias']; ?></td>
+												<td><?php echo $lcs_concentration[1][$i]['std_value']; ?></td>
+												<td><?php echo number_format((float) $ppbc, 2, '.', ''); ?></td>
+												<td><?php echo ( $r<$min || $r>$max ) ? 'F' : 'P'; ?></td>
+											</tr>
+										<?php
+											}//channel-a condition
+										}//channel-a loop
+									?>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div><!--lcs-col-sm-6-->
 			</div>
 		</div>
 
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">Channel B</div>
-				<div class="panel-body">
-					<div class="table-responsive">
-						<table class="table lcs-report">
-							<tr>
-								<th>CARBON #</th>
-								<th>Name</th>
-								<th>Alias</th>
-								<th>Standard Concentration (PPM VOL)</th>
-								<th>CALCULATED DILUTED CONCENTRATION (PPBC)</th>
-								<th>STATUS</th>
-							</tr>
-							<?php 
-								for($i=0; $i<$lcsb_total; $i++){
-									if($lcs_concentration[1][$i]['channel']=="B"){
-									
-									$carbon = $lcs_concentration[1][$i]['carbon_no'];
-									$method_name = $lcs_concentration[1][$i]['method_name'];
-									$concentration = $lcs_concentration[1][$i]['std_value'];
-									$amount = $lcs_concentration[1][$i]['Amount'];
-									$min = $lcs_concentration[1][$i]['min'];
-									$max = $lcs_concentration[1][$i]['max'];
-
-									$ppbc = $concentration * $lcs_info['dilution_factor'] * $carbon *1000;
-									$r = ($ppbc>0) ? ($amount / $ppbc * 100 ) : 0;
-									
-							?>
-									<tr>
-										<td><?php echo $lcs_concentration[1][$i]['carbon_no']; ?></td>
-										<td><?php echo $lcs_concentration[1][$i]['method_name']; ?></td>
-										<td><?php echo $lcs_concentration[1][$i]['alias']; ?></td>
-										<td><?php echo $lcs_concentration[1][$i]['std_value']; ?></td>
-										<td><?php echo number_format((float) $ppbc, 2, '.', ''); ?></td>
-										<td><?php echo ( $r<$min || $r>$max ) ? 'F' : 'P'; ?></td>
-									</tr>
-								<?php
-									}//channel-a condition
-								}//channel-a loop
-							?>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		</div>
-		</div>
-		</div>
-	</div>
-</div>
-
-
-<div class="panel panel-default">
-	<div class="panel-heading">CVS Compounds</div>
-	<div class="panel-body">
 		<?php 
 		$cvsa_total = count($cvs_concentration[0]);
 		$cvsb_total = count($cvs_concentration[1]);
 		?>
 		<style type="text/css">
 			.cvs-report th,.cvs-report th{ font-size: 13px !important; }
-			.cvs-info li{ list-style: none; }
+			.cvs-info li{ list-style: none; display: inline; }
 		</style>
 
 		<div class="panel panel-default">
-		<div class="panel-heading">cvs Concentration (<?php echo $cvs_info['site_name']; ?>)</div>
-		<div class="panel-body">
+			<div class="panel-heading">cvs Concentration</div>
+			<div class="panel-body">
 
-		<div class="col-sm-12 cvs-info">
-			<ul>
-				<li><b>Cylinder:</b> <?php echo $cvs_info['cylinder']; ?></li>
-				<li><b>Date On:</b> <?php echo $cvs_info['date_on']; ?></li>
-				<li><b>Date Off:</b> <?php echo $cvs_info['date_off']; ?></li>
-				<li><b>Blend Ratio:</b> <?php echo $cvs_info['dilution_factor']; ?></li>
-			</ul>
-		</div>
-
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">Channel A</div>
-				<div class="panel-body">
-					<div class="table-responsive">
-						<table class="table cvs-report">
-							<tr>
-								<th>CARBON #</th>
-								<th>Name</th>
-								<th>Alias</th>
-								<th>Standard Concentration (PPM VOL)</th>
-								<th>CALCULATED DILUTED CONCENTRATION (PPBC)</th>
-								<th>STATUS</th>
-							</tr>
-							<?php 
-								for($i=0; $i<$cvsa_total; $i++){
-									if($cvs_concentration[0][$i]['channel']=="A"){
-									
-									$carbon = $cvs_concentration[0][$i]['carbon_no'];
-									$method_name = $cvs_concentration[0][$i]['method_name'];
-									$concentration = $cvs_concentration[0][$i]['std_value'];
-									$amount = $cvs_concentration[0][$i]['Amount'];
-									$min = $cvs_concentration[0][$i]['min'];
-									$max = $cvs_concentration[0][$i]['max'];
-
-									$ppbc = $concentration * $cvs_info['dilution_factor'] * $carbon * 1000;
-									$r = ($ppbc>0) ? ($amount / $ppbc * 100 ) : 0;
-									
-							?>
-									<tr>
-										<td><?php echo $cvs_concentration[0][$i]['carbon_no']; ?></td>
-										<td><?php echo $cvs_concentration[0][$i]['method_name']; ?></td>
-										<td><?php echo $cvs_concentration[0][$i]['alias']; ?></td>
-										<td><?php echo $cvs_concentration[0][$i]['std_value']; ?></td>
-										<td><?php echo number_format((float) $ppbc, 2, '.', ''); ?></td>
-										<td><?php echo ( $r<$min || $r>$max ) ? 'F' : 'P'; ?></td>
-									</tr>
-								<?php
-									}//channel-a condition
-								}//channel-a loop
-							?>
-						</table>
-					</div>
+				<div class="col-sm-12 cvs-info">
+					<ul>
+						<li><b>Cylinder:</b> <?php echo $cvs_info['cylinder']; ?></li>
+						<li><b>Date On:</b> <?php echo $cvs_info['date_on']; ?></li>
+						<li><b>Date Off:</b> <?php echo $cvs_info['date_off']; ?></li>
+						<li><b>Blend Ratio:</b> <?php echo $cvs_info['dilution_factor']; ?></li>
+					</ul>
 				</div>
-			</div>
-		</div>
 
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">Channel B</div>
-				<div class="panel-body">
-					<div class="table-responsive">
-						<table class="table cvs-report">
-							<tr>
-								<th>CARBON #</th>
-								<th>Name</th>
-								<th>Alias</th>
-								<th>Standard Concentration (PPM VOL)</th>
-								<th>CALCULATED DILUTED CONCENTRATION (PPBC)</th>
-								<th>STATUS</th>
-							</tr>
-							<?php 
-								for($i=0; $i<$cvsb_total; $i++){
-									if($cvs_concentration[1][$i]['channel']=="B"){
-									
-									$carbon = $cvs_concentration[1][$i]['carbon_no'];
-									$method_name = $cvs_concentration[1][$i]['method_name'];
-									$concentration = $cvs_concentration[1][$i]['std_value'];
-									$amount = $cvs_concentration[1][$i]['Amount'];
-									$min = $cvs_concentration[1][$i]['min'];
-									$max = $cvs_concentration[1][$i]['max'];
-
-									$ppbc = $concentration * $cvs_info['dilution_factor'] * $carbon *1000;
-									$r = ($ppbc>0) ? ($amount / $ppbc * 100 ) : 0;
-									
-							?>
+				<div class="col-md-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">Channel A</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table class="table cvs-report">
 									<tr>
-										<td><?php echo $cvs_concentration[1][$i]['carbon_no']; ?></td>
-										<td><?php echo $cvs_concentration[1][$i]['method_name']; ?></td>
-										<td><?php echo $cvs_concentration[1][$i]['alias']; ?></td>
-										<td><?php echo $cvs_concentration[1][$i]['std_value']; ?></td>
-										<td><?php echo number_format((float) $ppbc, 2, '.', ''); ?></td>
-										<td><?php echo ( $r<$min || $r>$max ) ? 'F' : 'P'; ?></td>
+										<th>CARBON #</th>
+										<th>Name</th>
+										<th>Alias</th>
+										<th>PPM VOL</th>
+										<th>PPBC</th>
+										<th>STATUS</th>
 									</tr>
-								<?php
-									}//channel-a condition
-								}//channel-a loop
-							?>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
+									<?php 
+										for($i=0; $i<$cvsa_total; $i++){
+											if($cvs_concentration[0][$i]['channel']=="A"){
+											
+											$carbon = $cvs_concentration[0][$i]['carbon_no'];
+											$method_name = $cvs_concentration[0][$i]['method_name'];
+											$concentration = $cvs_concentration[0][$i]['std_value'];
+											$amount = $cvs_concentration[0][$i]['Amount'];
+											$min = $cvs_concentration[0][$i]['min'];
+											$max = $cvs_concentration[0][$i]['max'];
 
-		</div>
-		</div>
+											$ppbc = $concentration * $cvs_info['dilution_factor'] * $carbon * 1000;
+											$r = ($ppbc>0) ? ($amount / $ppbc * 100 ) : 0;
+											
+									?>
+											<tr>
+												<td><?php echo $cvs_concentration[0][$i]['carbon_no']; ?></td>
+												<td><?php echo $cvs_concentration[0][$i]['method_name']; ?></td>
+												<td><?php echo $cvs_concentration[0][$i]['alias']; ?></td>
+												<td><?php echo $cvs_concentration[0][$i]['std_value']; ?></td>
+												<td><?php echo number_format((float) $ppbc, 2, '.', ''); ?></td>
+												<td><?php echo ( $r<$min || $r>$max ) ? 'F' : 'P'; ?></td>
+											</tr>
+										<?php
+											}//channel-a condition
+										}//channel-a loop
+									?>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div><!--cvs-col-sm-6-->
+
+				<div class="col-md-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">Channel B</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table class="table cvs-report">
+									<tr>
+										<th>CARBON #</th>
+										<th>Name</th>
+										<th>Alias</th>
+										<th>PPM VOL</th>
+										<th>PPBC</th>
+										<th>STATUS</th>
+									</tr>
+									<?php 
+										for($i=0; $i<$cvsb_total; $i++){
+											if($cvs_concentration[1][$i]['channel']=="B"){
+											
+											$carbon = $cvs_concentration[1][$i]['carbon_no'];
+											$method_name = $cvs_concentration[1][$i]['method_name'];
+											$concentration = $cvs_concentration[1][$i]['std_value'];
+											$amount = $cvs_concentration[1][$i]['Amount'];
+											$min = $cvs_concentration[1][$i]['min'];
+											$max = $cvs_concentration[1][$i]['max'];
+
+											$ppbc = $concentration * $cvs_info['dilution_factor'] * $carbon *1000;
+											$r = ($ppbc>0) ? ($amount / $ppbc * 100 ) : 0;
+											
+									?>
+											<tr>
+												<td><?php echo $cvs_concentration[1][$i]['carbon_no']; ?></td>
+												<td><?php echo $cvs_concentration[1][$i]['method_name']; ?></td>
+												<td><?php echo $cvs_concentration[1][$i]['alias']; ?></td>
+												<td><?php echo $cvs_concentration[1][$i]['std_value']; ?></td>
+												<td><?php echo number_format((float) $ppbc, 2, '.', ''); ?></td>
+												<td><?php echo ( $r<$min || $r>$max ) ? 'F' : 'P'; ?></td>
+											</tr>
+										<?php
+											}//channel-a condition
+										}//channel-a loop
+									?>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div><!--cvs-col-sm-6-->
+			</div>
 		</div>
 
 	</div>

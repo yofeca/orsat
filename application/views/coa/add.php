@@ -1,39 +1,54 @@
 <?php
 @session_start();
 $sid = session_id()."_".time();
+print_r($record);
+print_r($values);
 ?>
 <script>
 function saveRecord(approve){
 
 	var cyl = $('input[name="cylinder"]');
+	var stype = $('select[name="standard_type"]');
 
 	if(cyl.val().length<1){
-		cyl.focus();
-	}else{
-		extra = "";
-		jQuery("#savebutton").val("Saving...");
-		cylinder = $("#record_form").serialize();
-		lcs_values = $("#form-cylinder-lcs-standards").serialize();
-		cvs_values = $("#form-cylinder-cvs-standards").serialize();
-
-		jQuery("#record_form *").attr("disabled", true);
-		jQuery.ajax({
-			<?php
-			if($record['id']){
-				?>url: "<?php  echo site_url(); echo $controller ?>/ajax_edit"+extra,<?php
-			}
-			else{
-				?>url: "<?php echo site_url(); echo $controller ?>/ajax_add"+extra,<?php
-			}
-			?>
-			type: "POST",
-			data: { cyl: cylinder, lcs: lcs_values, cvs: cvs_values },
-			dataType: "script",
-			success: function(data){
-				//alert(data);
-			}
-		});	
+		cyl.focus(); return;
 	}
+
+	if(stype.val().length<1){
+		$('.chosen-container').css({"border":"1px solid red","border-radius":"4px"}); return;
+	}
+
+	extra = "";
+	jQuery("#savebutton").val("Saving...");
+	cylinder = $("#record_form").serialize();
+	var values;
+
+	if(stype.val() =='rts'){
+		values = $("#form-rts-standards").serialize();
+		console.log('rts');
+	}else{
+		values = $("#form-lcs_cvs-standards").serialize();
+		console.log('lcs');
+	}
+	
+	jQuery("#record_form *").attr("disabled", true);
+	jQuery.ajax({
+		<?php
+		if($record['id']){
+			?>url: "<?php  echo site_url(); echo $controller ?>/ajax_edit/<?php echo $record['id']; ?>"+extra,<?php
+		}
+		else{
+			?>url: "<?php echo site_url(); echo $controller ?>/ajax_add"+extra,<?php
+		}
+		?>
+		type: "POST",
+		data: { cyl: cylinder, val: values },
+		dataType: "script",
+		success: function(data){
+			//alert(data);
+		}
+	});	
+
 }
 function deleteRecord(co_id){
 	if(confirm("Are you sure you want to delete this record?")){
@@ -85,11 +100,23 @@ function deleteRecord(co_id){
 								?>
 
 								<div class="form-group">
-										<label for="cylinder" class="col-sm-4 control-label">Cylinder</label>
-										<div class="col-sm-8">
-											<input type="text" name="cylinder" size="40" class="form-control" placeholder="Enter Cylinder">
-										</div>
+									<label for="cylinder" class="col-sm-4 control-label">Cylinder Name: </label>
+									<div class="col-sm-8">
+										<input type="text" name="cylinder" size="40" class="form-control" placeholder="Enter Cylinder">
 									</div>
+								</div>
+								<div class="form-group">
+									<label for="cylinder" class="col-sm-4 control-label">Standard Type: </label>
+									<div class="col-sm-8">
+										<select name="standard_type" class="chosen-select" data-placeholder="Choose Standard Type" <?php echo ($record['id']) ? 'disabled':'' ?>>
+											<option></option>
+											<option value="lcs">LCS</option>
+											<option value="cvs">CVS</option>
+											<option value="rts">RTS</option>
+										</select>
+										<input type="hidden" name="type" size="40" class="form-control" value="">
+									</div>
+								</div>
 
 								<div class="form-group">
 									<div class="col-sm-offset-4 col-sm-8">
@@ -112,27 +139,77 @@ function deleteRecord(co_id){
 						<div class="panel panel-default">
 							<div class="panel-heading">Cylinder Standards</div>
 							<div class="panel-body">
-								<form id="from-standards" role="form">
-									<div class="container">
-										<label class="checkbox-inline"><input type="radio" value="LCS" name="standard"> LCS</label>
-										<label class="checkbox-inline"><input type="radio" value="CVS" name="standard"> CVS</label>
-										<label class="checkbox-inline"><input type="radio" value="RTS" name="standard"> RTS</label>
-									</div>
-
-			    					<table class="table table-striped">
+								<form id="form-lcs_cvs-standards" role="form">									
+			    					<table class="table table-striped" id="lcs_cvs_standards" style="display: <?php echo ($record['type']=='LCS' || $record['type']=='CVS') ? 'block' : 'none'?>">
 										<tr>
 											<th>Component</th>
 											<th>Standard Concentration</th>
 										</tr>
+										<tr><td colspan="2" style="background: #ddd"><b>Channel A</b></td></tr>
 										<?php
-										print_r($lcs_cvs);
+										if($values && ($record['type']=='LCS' || $record['type']=='CVS')){
+											$lcs_cvs = $values;
+										}
 										$tlc = count($lcs_cvs); 
 										for($i=0; $i<$tlc; $i++){
 											if($lcs_cvs[$i]['channel']=='A'){
 											?>
-											<tr id="lcs_cvs-tr-<?php echo $lcs_cvs[$i]['tceq_id'] ?>" class="lcs_cvs">
+											<tr id="lcs_cvs-tr-<?php echo $lcs_cvs[$i]['airs_list_id'] ?>" class="lcs_cvs">
 												<td><?php echo $lcs_cvs[$i]['component_name']; ?></td>
-												<td><input type="number" step="any" name="lcs_cvs-<?php echo $lcs_cvs[$i]['tceq_id'] ?>" value="<?php echo (isset($lcs_cvs[$i]['value']))? $lcs_cvs[$i]['value'] : '' ?>"></td>
+												<td><input type="number" step="any" name="values-<?php echo $lcs_cvs[$i]['airs_list_id'] ?>" value="<?php echo (isset($lcs_cvs[$i]['value']))? $lcs_cvs[$i]['value'] : '' ?>"></td>
+											</tr>
+											<?php
+											}
+										}
+										?>
+										<tr><td colspan="2" style="background: #ddd"><b>Channel B</b></td></tr>
+										<?php
+										$tlc = count($lcs_cvs); 
+										for($i=0; $i<$tlc; $i++){
+											if($lcs_cvs[$i]['channel']=='B'){
+											?>
+											<tr id="lcs_cvs-tr-<?php echo $lcs_cvs[$i]['airs_list_id'] ?>" class="lcs_cvs">
+												<td><?php echo $lcs_cvs[$i]['component_name']; ?></td>
+												<td><input type="number" step="any" name="values-<?php echo $lcs_cvs[$i]['airs_list_id'] ?>" value="<?php echo (isset($lcs_cvs[$i]['value']))? $lcs_cvs[$i]['value'] : '' ?>"></td>
+											</tr>
+											<?php
+											}
+										}
+										?>
+			    					</table>
+								</form>
+								<form id="form-rts-standards" role="form">
+			    					<table class="table table-striped" id="rts_standards" style="display: <?php echo ($record['type']=='RTS') ? 'block' : 'none'?>">
+										<tr>
+											<th>Component</th>
+											<th>Standard Concentration</th>
+										</tr>
+										<tr><td colspan="2" style="background: #ddd"><b>Channel A</b></td></tr>
+										<?php
+										if($values && $record['type']=='RTS'){
+											$rts = $values;
+										}
+										$tlc = count($rts); 
+										for($i=0; $i<$tlc; $i++){
+											if($rts[$i]['channel']=='A'){
+											?>
+											<tr id="rts-tr-<?php echo $rts[$i]['airs_list_id'] ?>" class="rts">
+												<td><?php echo $rts[$i]['component_name']; ?></td>
+												<td><input type="number" step="any" name="values-<?php echo $rts[$i]['airs_list_id'] ?>" value="<?php echo (isset($rts[$i]['value']))? $rts[$i]['value'] : '' ?>"></td>
+											</tr>
+											<?php
+											}
+										}
+										?>
+										<tr><td colspan="2" style="background: #ddd"><b>Channel B</b></td></tr>
+										<?php
+										$tlc = count($rts); 
+										for($i=0; $i<$tlc; $i++){
+											if($rts[$i]['channel']=='B'){
+											?>
+											<tr id="rts-tr-<?php echo $rts[$i]['airs_list_id'] ?>" class="rts">
+												<td><?php echo $rts[$i]['component_name']; ?></td>
+												<td><input type="number" step="any" name="values-<?php echo $rts[$i]['airs_list_id'] ?>" value="<?php echo (isset($rts[$i]['value']))? $rts[$i]['value'] : '' ?>"></td>
 											</tr>
 											<?php
 											}
@@ -160,17 +237,16 @@ function deleteRecord(co_id){
 		}
 	}
 	?>
-$('input[name="standard"]').on('click', function(){
+$('select[name="standard_type"]').change(function(){
 	var standard = $(this).val();
-	$.ajax({
-		url: "<?php echo site_url(); echo $controller ?>/ajax_delete/"+co_id,
-		type: "POST",
-		data: formdata,
-		dataType: "script",
-		success: function(){
-			jQuery("#tr"+co_id).fadeOut(200);
-			self.location = "<?php echo site_url(); echo $controller ?>";
-		}
-	});
+	if(standard =='lcs' || standard=='cvs'){
+		$('#lcs_cvs_standards').show(400);
+		$('#rts_standards').hide();
+	}else{
+		$('#rts_standards').show(400);
+		$('#lcs_cvs_standards').hide();
+	}
 });
+
+$('select[name="standard_type"]').val($('input[name="type"]').val().toLowerCase());
 </script>

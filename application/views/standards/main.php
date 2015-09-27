@@ -256,6 +256,7 @@
 		$('.li-standards').remove();
 		var id = $(this).attr('id').replace('add-','');
 		formdata = "id="+id;
+		console.log(formdata);
 		jQuery.ajax({
 			url: "<?php echo site_url(); echo $controller ?>/ajax_fetch_tceq_components/"+id,
 			type: "POST",
@@ -267,7 +268,7 @@
 					if($.inArray(data[i].component_name,std_array) > -1){
 						def = 'def';
 					}
-					$('#list-standards').append('<li class="list-group-item li-standards '+def+'"><input type="checkbox" name="standards" class="standards" id="'+id+'-'+data[i].id+'" value="'+id+'-'+data[i].id+'">'+data[i].component_name+'</li>');
+					$('#list-standards').append('<li class="list-group-item li-standards '+def+'"><input type="checkbox" name="standards" class="standards" id="'+id+'-'+data[i].airs_list_id+'" value="'+id+'-'+data[i].airs_list_id+'">'+data[i].component_name+'</li>');
 				}
 
 			}
@@ -296,7 +297,7 @@
 
 	function addStandardComponents(chVal){
 		$.post(
-			'<?php echo site_url(); echo $controller; ?>/ajax_add_tceq_components',
+			'<?php echo site_url(); echo $controller; ?>/ajax_add_standard_components',
 			{'data':chVal}
 		).done(function(){
 			self.location = "<?php echo site_url(); echo $controller; ?>";

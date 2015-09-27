@@ -70,7 +70,7 @@
 									<?php $cvs_total = count($cvs); ?>
 										<div class="panel-body">
 											<div class="col-sm-12 table-responsive">
-												<table class="table table-striped table-bordered" id="cvs-table">
+												<table class="table table-striped table-bordered cylinder-table" id="cvs-table">
 													<thead>
 														<tr>
 															<th>CYLINDER</th>
@@ -144,7 +144,7 @@
 													</div>
 												</div>
 												<div class="form-group">
-													<label class="col-sm-3 control-label">Dilution Factor</label>
+													<label class="col-sm-3 control-label">Blend Ratio</label>
 													<div class="col-sm-7">
 														<input class="form-control form-control-flat input-sm inputmask" type="text" name="dilution_factor" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true" style="text-align: right;" placeholder="0.00">
 													</div>

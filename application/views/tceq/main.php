@@ -95,6 +95,10 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">State Of Texas Components</div>
 			<div class="panel-body">
+				<div class="alert alert-success alert-dismissible" role="alert">
+                  	<button class="close" type="button" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                  	This page is used to set the <strong>default target components</strong> to be used by all networks as default components.
+                </div>
 				<div class="col-sm-6">
 					<div class="panel panel-default">
 						<div class="panel-heading">Channel A Components <button class="btn btn-default btn-sm pull-right" style="margin-top: -6px" id="add-a" data-toggle="modal" data-target="#add-compound-a">Add</button></div>

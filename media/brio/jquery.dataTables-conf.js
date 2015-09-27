@@ -9,7 +9,7 @@ $(document).ready(function() {
 	$('#dt-wrapper').dataTable(); 
     $('#txo-dumps').dataTable({scrollX: true, ordering:false});
 	$('#site-list').dataTable();
-    $('#lcs-table').dataTable();    
+    $('.cylinder-table').dataTable({ordering:false});    
     
 	/************************************
 	Toggle Column

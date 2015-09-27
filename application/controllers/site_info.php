@@ -29,6 +29,7 @@ class site_info extends CI_Controller {
 		$data['target_components_b'] = $this->component_data->fetch_network_target_components('B',$site_info['network_id']);
 		$data['lcs'] = $this->site_data->fetch_site_standards($id,'LCS');
 		$data['cvs'] = $this->site_data->fetch_site_standards($id,'CVS');
+		$data['rts'] = $this->site_data->fetch_site_standards($id,'RTS');
 		$data['qaqc'] = $qaqc = $this->site_data->fetch_qaqc($id);
 		$data['site_txo_data'] = $this->load->view($controller.'/latest-txo', array('txo'=>$this->txo_data->fetch_monthly_txo($id)), true);
 		$data['controller'] = $controller;

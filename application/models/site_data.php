@@ -121,17 +121,17 @@ class site_data extends CI_Model {
 	public function fetch_site_standards($site_id,$type){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 
-		$sql = "SELECT s.*, c.cylinder FROM `standards` s LEFT JOIN `coa` c ON s.coa_id=c.id WHERE s.site_id=$site_id AND type='$type'";
+		$sql = "SELECT s.*, c.cylinder FROM `standards` s INNER JOIN `coa` c ON s.coa_id=c.id WHERE s.site_id=$site_id AND s.type='$type'";
 		$q = $this->db->query($sql);
 		$records = $q->result_array();
 		
 		return $records;
 	}
 
-	public function fetch_coa(){
+	public function fetch_coa($type){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 
-		$sql = "SELECT * FROM `coa`";
+		$sql = "SELECT * FROM `coa` WHERE `type`='$type'";
 		$q = $this->db->query($sql);
 		$records = $q->result_array();
 		

@@ -125,8 +125,8 @@ class network extends CI_Controller {
 		$data['event'] = 'add';
 		$data['target_a'] = $this->component_data->fetch_tceq('A');
 		$data['target_b'] = $this->component_data->fetch_tceq('B');
-		//$data['tceq_a'] = $this->component_data->fetch_airs_file('A');
-		//$data['tceq_b'] = $this->component_data->fetch_airs_file('B');
+		$data['tceq_a'] = $this->component_data->fetch_airs_file('A');
+		$data['tceq_b'] = $this->component_data->fetch_airs_file('B');
 		$data['controller'] = $controller;
 		$data['content'] = $this->load->view($controller.'/add', $data, true);
 		$this->load->view('layout/main', $data);;
@@ -173,7 +173,7 @@ class network extends CI_Controller {
 
 			?>
 			alertX("Successfully Updated Record.");
-			self.location = "<?php echo site_url($controller."/edit/".$_POST['id']); ?>";
+			//self.location = "<?php echo site_url($controller."/edit/".$_POST['id']); ?>";
 			<?php
 		}
 		?>jQuery("#record_form *").attr("disabled", false);<?php
@@ -206,14 +206,14 @@ class network extends CI_Controller {
 
 			for($i=0; $i<$ta; $i++){
 				$sql = "INSERT INTO `network_target_components` SET ";					
-				$sql .= " `tceq_id` = '".mysql_real_escape_string($itemsa[$i])."',";
+				$sql .= " `airs_list_id` = '".mysql_real_escape_string($itemsa[$i])."',";
 				$sql .= " `sort` = '".mysql_real_escape_string($i+1)."',";
 				$sql .= " `network_id` = '$insert_id'";
 				$this->db->query($sql);
 			}
 			for($i=0; $i<$tb; $i++){
 				$sql = "INSERT INTO `network_target_components` SET ";					
-				$sql .= " `tceq_id` = '".mysql_real_escape_string($itemsb[$i])."',";
+				$sql .= " `airs_list_id` = '".mysql_real_escape_string($itemsb[$i])."',";
 				$sql .= " `sort` = '".mysql_real_escape_string($i+1)."',";
 				$sql .= " `network_id` = '$insert_id'";
 				$this->db->query($sql);
@@ -246,14 +246,16 @@ class network extends CI_Controller {
 		<?php		
 		exit();
 	}
-	public function ajax_add_target_components(){
+
+	public function ajax_add_target_components($id){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 		$table = $this->table;
 		$controller = $this->controller;
 		$error = false;		
 		
+		if(!$id) return;
+
 		$data = $_POST['data'];
-		$id = $_POST['nid'];
 
 		$t = count($data);
 
@@ -261,7 +263,7 @@ class network extends CI_Controller {
 			for($i=0; $i<$t; $i++){
 				$d = explode('-',$data[$i]);
 				$sql = "INSERT INTO `network_target_components` SET ";					
-				$sql .= " `tceq_id` = '".mysql_real_escape_string($d[0])."',";
+				$sql .= " `airs_list_id` = '".mysql_real_escape_string($d[0])."',";
 				$sql .= " `sort` = '".mysql_real_escape_string($d[1])."',";
 				$sql .= " `network_id` = '$id'";
 				$this->db->query($sql);
@@ -269,21 +271,35 @@ class network extends CI_Controller {
 		}
 	}
 
-	public function ajax_delete_target_component(){
+	public function ajax_remove_target_component($id){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 		$table = $this->table;
 		
-		if(!$id){
-			$id = $_POST['id'];
-		}
+		if(!$id) return;
 		
 		$id = db_escape($id);
-		$sql = "delete from `network_target_components` where id = '".$id."' limit 1";
+		$sql = "DELETE FROM `network_target_components` where airs_list_id = '".$_POST['aid']."' AND network_id=$id";
 		$q = $this->db->query($sql);
-		
+		echo $sql;
 		return true;
 	}
-	public function ajax_target_component_sortable(){
+
+	public function ajax_remove_all_target_component($network_id){
+		$this->user_validation->validate(__CLASS__, __FUNCTION__);
+		$table = $this->table;
+		
+		if(!$network_id) return;
+		
+		$t = count($_POST['chVal']);
+
+		for($i=0; $i<$t; $i++){
+			$sql = "DELETE FROM `network_target_components` where airs_list_id = '".$_POST['chVal'][$i]."' AND network_id=$network_id";
+			$q = $this->db->query($sql);
+		}
+		return true;
+	}
+
+	public function ajax_target_component_sortable($network_id){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 		$table = $this->table;
 		
@@ -295,7 +311,7 @@ class network extends CI_Controller {
 
 		foreach ($item as $k => $v){
 			$sort_number = $k + 1;
-			$sql = "UPDATE `network_target_components` SET sort=$sort_number WHERE id=$v";
+			$sql = "UPDATE `network_target_components` SET sort=$sort_number WHERE airs_list_id=$v AND `network_id`=$network_id";
 			$q = $this->db->query($sql);
 		}
 	}

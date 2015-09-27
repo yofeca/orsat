@@ -7,7 +7,7 @@ $(document).ready(function(){
 		coa.delete(id);
 	});
 	$('.cylinder').on('click',function(){
-		var id = $(this).attr('id').replace('cylinder-','');
+		id = $(this).attr('id');
 		coa.fetchStandards(id);
 	});
 	var coa = {
@@ -37,9 +37,8 @@ $(document).ready(function(){
 			self.location = "<?php echo site_url(); echo $controller; ?>/add";
 		},
 		fetchStandards: function(id){
-
-			$('#lcs-components').DataTable({
-				'sAjaxSource': '<?php echo site_url(); ?><?php echo $controller; ?>/ajax_fetch_standards?cylinder=' + id+'&type=lcs',
+			$('#channel-a').DataTable({
+				'sAjaxSource': '<?php echo site_url(); ?><?php echo $controller; ?>/ajax_fetch_standards?cylinder=' + id +'&ch=a',
 				"sAjaxDataProp": "",
 				'destroy': true,
 				'deferRender': true,
@@ -51,8 +50,8 @@ $(document).ready(function(){
 					{"mData": "value"}
 				]
 			});
-			$('#cvs-components').DataTable({
-				'sAjaxSource': '<?php echo site_url(); ?><?php echo $controller; ?>/ajax_fetch_standards?cylinder=' + id+'&type=cvs',
+			$('#channel-b').DataTable({
+				'sAjaxSource': '<?php echo site_url(); ?><?php echo $controller; ?>/ajax_fetch_standards?cylinder=' + id +'&ch=b',
 				"sAjaxDataProp": "",
 				'destroy': true,
 				'deferRender': true,
@@ -88,7 +87,7 @@ $(document).ready(function(){
 							<select name='filter' id='sfilter' class="form-control chosen-select" data-placeholder="Choose a Filter">
 							<option></option>
 							<option value="cylinder">Cylinder</option>	
-
+							<option value="type">Type</option>
 							</select>
 						</div>
 					</div>
@@ -124,6 +123,7 @@ $(document).ready(function(){
 									<thead>
 										<tr>
 											<th>Cylinder</th>
+											<th>Type</th>
 											<th></th>
 										</tr>
 									</thead>
@@ -133,7 +133,8 @@ $(document).ready(function(){
 									for($i=0; $i<$t; $i++){
 										?>
 										<tr id="tr<?php echo htmlentitiesX($records[$i]['id']); ?>">
-											<td><a href="javascript:;" id="cylinder-<?php echo $records[$i]['id']?>" class="cylinder" ><?php echo $records[$i]['cylinder'];?></a></td>
+											<td><a href="javascript:;" id="<?php echo $records[$i]['type']; ?>-<?php echo $records[$i]['id']?>" class="cylinder" ><?php echo $records[$i]['cylinder'];?></a></td>
+											<td><?php echo $records[$i]['type']; ?></td>
 											<td width='50px'>
 												<a href="<?php echo site_url(); ?><?php echo $controller; ?>/edit/<?php echo $records[$i]['id']?>" ><i class="fa fa-pencil-square-o"></i></a>
 												<a style='color: red; cursor:pointer;' id="rec-<?php echo htmlentitiesX($records[$i]['id']) ?>" class="delete" ><i class="fa fa-trash-o"></i></a>
@@ -188,7 +189,8 @@ $(document).ready(function(){
 								<div class="panel-heading" style="display: block;">Components</div>
 								<div class="panel-body">
 									<div clas="table-responsive">
-										<table class="table table-striped table-bordered" id="lcs-components">
+										<h5><b>Channel A</b></h5>
+										<table class="table table-striped table-bordered" id="channel-a">
 											<thead>
 												<tr>
 													<th>Name</th>
@@ -196,7 +198,8 @@ $(document).ready(function(){
 												</tr>
 											</thead>
 										</table>
-										<table class="table table-striped table-bordered" id="cvs-components">
+										<h5><b>Channel B</b></h5>
+										<table class="table table-striped table-bordered" id="channel-b">
 											<thead>
 												<tr>
 													<th>Name</th>

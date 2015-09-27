@@ -105,70 +105,54 @@ class coa extends CI_Controller {
 			redirect(site_url($controller));
 		}
 
-		$data['lcs_cvs'] = $this->component_data->fetch_standard_components('LCS','edit',$id);
+		$data['values'] = $this->component_data->fetch_standard_components('','edit',$id);
 		$data['record'] = $record;
 		$data['controller'] = $controller;
 		$data['content'] = $this->load->view($controller.'/add', $data, true);		
 		$this->load->view('layout/main', $data);;
 	}
 		
-	public function add(){	
+	public function add($standard=""){	
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 		$controller = $this->controller;
+
+		$data['standard'] = (isset($standard)) ? $standard : 'lcs_cvs';
 		$data['lcs_cvs'] = $this->component_data->fetch_standard_components('LCS_CVS','add','');
+		$data['rts'] = $this->component_data->fetch_standard_components('RTS','add','');
 		$data['controller'] = $controller;
 		$data['content'] = $this->load->view($controller.'/add', $data, true);
 		$this->load->view('layout/main', $data);;
 	}
 
-	public function ajax_edit(){
+	public function ajax_edit($id){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 		$table = $this->table;
 		$controller = $this->controller;
 		$error = false;		
 		
+		if(!$id) return;
+
+		parse_str($_POST['cyl'], $cylinder);
+		parse_str($_POST['val'], $values);
+
 		if(!$error){
-			// check if there are other lands that are connected to the same land detail
-			$id = $_POST['id'];			
-			
-			$sql = " UPDATE `".$table."` SET ";
 
-
-			$c = explode('&',$_POST['cyl']);
-			$i = explode('=',$c[0]);
-			$c = explode('=',$c[1]);
-			
-			$cylinder = $c[1];
-			$id = $i[1];
-			
+			$sql = "UPDATE `".$table."` SET ";
 
 			//fields		
-			$sql .= " `cylinder` = '".mysql_real_escape_string($cylinder)."' WHERE id='$id'";
+			$sql .= " `cylinder` = '".mysql_real_escape_string($cylinder['cylinder'])."' WHERE id=$id";
 			$this->db->query($sql);										
+			$insert_id = $this->db->insert_id();
 
-			//lcs
-			$lcs = explode('&',$_POST['lcs']);
-			$tlcs = count($lcs);
-			for($i=0; $i<$tlcs; $i++){
-				$type = explode('-',$lcs[$i]);
-				$value = explode("=",$type[1]);
-				$sql = "UPDATE `coa_components` SET value='".$value[1]."' WHERE tceq_id='".$value[0]."' AND type='".$type[0]."' AND coa_id='$id'";
+			//standard values
+			foreach($values as $k => $v){
+				$aid = str_replace('values-','',$k);
+				$sql = "UPDATE `coa_components` SET value='".$v."' WHERE coa_id='".$id."' AND airs_list_id='".$aid."'";
 				$this->db->query($sql);
-
 			}
-
-			//cvs
-			$cvs = explode('&',$_POST['cvs']);
-			$tcvs = count($cvs);
-			for($i=0; $i<$tcvs; $i++){
-				$type = explode('-',$cvs[$i]);
-				$value = explode("=",$type[1]);
-				$sql = "UPDATE `coa_components` SET value='".$value[1]."' WHERE tceq_id='".$value[0]."' AND type='".$type[0]."' AND coa_id='$id'";
-				$this->db->query($sql);
-			}									
 			?>
-			alertX("Successfully Updated Record.");
-			self.location = "<?php echo site_url($controller."/edit/".$id); ?>";
+			alertX("Successfully Inserted Record.");
+			self.location = "<?php echo site_url($controller); ?>";
 			<?php
 		}
 		?>jQuery("#record_form *").attr("disabled", false);<?php
@@ -180,35 +164,23 @@ class coa extends CI_Controller {
 		$controller = $this->controller;
 		$error = false;		
 		
-		if(!$error){								
+		parse_str($_POST['cyl'], $cylinder);
+		parse_str($_POST['val'], $values);
+
+		if(!$error){
+
 			$sql = "INSERT INTO `".$table."` SET ";
 
-			$c = explode('&',$_POST['cyl']);
-			$c = explode('=',$c[1]);
-			$cylinder = $c[1];
-
 			//fields		
-			$sql .= " `cylinder` = '".mysql_real_escape_string($cylinder)."'";
+			$sql .= " `cylinder` = '".mysql_real_escape_string($cylinder['cylinder'])."'";
+			$sql .= ", `type` = '".mysql_real_escape_string(strtoupper($cylinder['standard_type']))."'";
 			$this->db->query($sql);										
 			$insert_id = $this->db->insert_id();
 
-			//lcs
-			$lcs = explode('&',$_POST['lcs']);
-			$tlcs = count($lcs);
-			for($i=0; $i<$tlcs; $i++){
-				$type = explode('-',$lcs[$i]);
-				$value = explode("=",$type[1]);
-				$sql = "INSERT INTO `coa_components` SET tceq_id='".$value[0]."', coa_id='".$insert_id."', value='".$value[1]."', type='".strtoupper($type[0])."'";
-				$this->db->query($sql);
-			}
-
-			//cvs
-			$cvs = explode('&',$_POST['cvs']);
-			$tcvs = count($cvs);
-			for($i=0; $i<$tcvs; $i++){
-				$type = explode('-',$cvs[$i]);
-				$value = explode("=",$type[1]);
-				$sql = "INSERT INTO `coa_components` SET tceq_id='".$value[0]."', coa_id='".$insert_id."', value='".$value[1]."', type='".strtoupper($type[0])."'";
+			//standard values
+			foreach($values as $k => $v){
+				$id = str_replace('values-','',$k);
+				$sql = "INSERT INTO `coa_components` SET airs_list_id='".$id."', coa_id='".$insert_id."', value='".$v."', type='".strtoupper($cylinder['standard_type'])."'";
 				$this->db->query($sql);
 			}
 			?>
@@ -243,13 +215,17 @@ class coa extends CI_Controller {
 	}
 
 	public function ajax_fetch_standards(){
-		$id = $_GET['cylinder'];
-		$type = strtoupper($_GET['type']);
+
+		$id = explode('-',$_GET['cylinder']);
+		$channel = strtoupper($_GET['ch']);
 
 		if(!$id) return;
-
 		$sql = "SELECT al.component_name, cc.value FROM `airs_list` al 
-		RIGHT JOIN `tceq` t ON al.id=t.airs_list_id RIGHT JOIN `coa_components` cc ON cc.tceq_id=t.id WHERE cc.type='$type' AND cc.coa_id='$id' ORDER BY type DESC";
+				RIGHT JOIN `tceq` t ON al.id=t.airs_list_id 
+				RIGHT JOIN `coa_components` cc 
+				ON cc.airs_list_id=t.airs_list_id 
+				WHERE cc.type='".$id[0]."' AND cc.coa_id='".$id[1]."' AND t.channel='$channel' ORDER BY t.sort ASC";
+
 		$q = $this->db->query($sql);
 		$records = $q->result_array();
 

@@ -208,7 +208,7 @@ function deleteRecord(co_id){
 					<div class="panel panel-default">
 						<div class="panel-heading">LCS Standards</div>
 						<div class="panel-body">
-							<?php echo $lcs_page ?>
+							<?php echo $lcs_page; ?>
 						</div>
 					</div><!--/.panel-->
 				</div>
@@ -217,7 +217,15 @@ function deleteRecord(co_id){
 					<div class="panel panel-default">
 						<div class="panel-heading">CVS Standards</div>
 						<div class="panel-body">
-							<?php echo $cvs_page ?>
+							<?php echo $cvs_page; ?>
+						</div>
+					</div><!--/.panel-->
+				</div>
+				<div class="col-sm-7">
+					<div class="panel panel-default">
+						<div class="panel-heading">RTS Standards</div>
+						<div class="panel-body">
+							<?php echo $rts_page; ?>
 						</div>
 					</div><!--/.panel-->
 				</div>

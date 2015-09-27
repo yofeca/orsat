@@ -38,17 +38,17 @@
 				</li>
 				<?php
 			}
-			if($this->user_validation->validate("coa", "index", false)){
-				?>
-				<li <?php if($controller=="coa"){ echo "class='selected'"; } ?> onclick='self.location="<?php echo site_url("coa");?>"'>
-					<a href='<?php echo site_url("coa");?>'>Certificate of Analysis</a>
-				</li>
-				<?php
-			}
 			if($this->user_validation->validate("network", "index", false)){
 				?>
 				<li <?php if($controller=="network"){ echo "class='selected'"; } ?> onclick='self.location="<?php echo site_url("network");?>"'>
 					<a href='<?php echo site_url("network");?>'>Networks</a>
+				</li>
+				<?php
+			}
+			if($this->user_validation->validate("coa", "index", false)){
+				?>
+				<li <?php if($controller=="coa"){ echo "class='selected'"; } ?> onclick='self.location="<?php echo site_url("coa");?>"'>
+					<a href='<?php echo site_url("coa");?>'>Certificate of Analysis</a>
 				</li>
 				<?php
 			}

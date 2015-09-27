@@ -29,7 +29,7 @@
 											'<?php echo site_url(); echo $controller; ?>/ajax_'+target,
 											{ 'data': formdata }
 										).done(function(){
-											self.location = "<?php echo site_url(); echo $controller; ?>/edit/<?php echo $site_id; ?>";
+											//self.location = "<?php echo site_url(); echo $controller; ?>/edit/<?php echo $site_id; ?>";
 										});
 									},
 									edit: function(){
@@ -70,7 +70,7 @@
 								<?php $lcs_total = count($lcs); ?>
 										<div class="panel-body">
 											<div class="col-sm-12 table-responsive">
-												<table class="table table-striped table-bordered" id="lcs-table">
+												<table class="table table-striped table-bordered cylinder-table" id="lcs-table">
 													<thead>
 														<tr>
 															<th>CYLINDER</th>
@@ -81,7 +81,7 @@
 														</tr>
 													</thead>
 													<tbody>
-														<?php 
+														<?php
 														for($i=0; $i<$lcs_total; $i++){
 															?>
 														<tr id="lcs-<?php echo $lcs[$i]['id']; ?>">

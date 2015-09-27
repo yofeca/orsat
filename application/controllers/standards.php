@@ -40,7 +40,7 @@ class standards extends CI_Controller {
 			$q = $this->db->query($sql);
 		}
 	}
-	public function ajax_add_tceq_components(){
+	public function ajax_add_standard_components(){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 		$table = $this->table;
 		$controller = $this->controller;
@@ -53,7 +53,7 @@ class standards extends CI_Controller {
 			for($i=0; $i<$t; $i++){
 				$d = explode('-',$data[$i]);
 				$sql = "INSERT INTO `standard_components` SET ";					
-				$sql .= "  `tceq_id` = '".mysql_real_escape_string($d[2])."'";
+				$sql .= "  `airs_list_id` = '".mysql_real_escape_string($d[2])."'";
 				$sql .= " , `type` = '".strtoupper($d[0])."'";
 				$this->db->query($sql);
 			}
@@ -102,7 +102,7 @@ class standards extends CI_Controller {
 
 		$key = explode('-',$id);
 
-		$tceq = $this->component_data->fetch_standard_tceq_components($key[0],strtoupper($key[1]));
+		$tceq = $this->component_data->fetch_standard_tceq_components($key[0],strtoupper($key[1])); //(standard,channel)
 	
 		echo json_encode($tceq);
 	}
