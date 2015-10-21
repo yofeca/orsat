@@ -21,6 +21,7 @@ class filter extends CI_Controller {
 		$searchx = trim($_GET['search']);
 		extract($_POST);
 				
+				print_r($_POST);
 		$sql = "select id from `".$table."` where 1";
 		
 		if($sitename !=""){

@@ -1,8 +1,6 @@
 <?php
 @session_start();
 $sid = session_id()."_".time();
-print_r($record);
-print_r($values);
 ?>
 <script>
 function saveRecord(approve){

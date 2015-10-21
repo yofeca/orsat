@@ -105,7 +105,7 @@
 											</div><!--/.panel-body-->
 											<div class="panel-footer">
 												<input type="checkbox" class="standard-check-all" id="check-all-standard-lcs_cvs-a" style="float: left; margin-right: 5px;"> Check All
-												<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("standard-lcs_cvs-a"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
+												<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("standard-lcs_cvs-a"); ' ><i class="fa fa-trash-o"></i> Delete Selected</a>
 											</div>
 										</div><!--/.panel-->
 									</div><!--/.container-fluid-->
@@ -138,7 +138,7 @@
 											</div>
 											<div class="panel-footer">
 												<input type="checkbox" class="standard-check-all" id="check-all-standard-lcs_cvs-b" style="float: left; margin-right: 5px;"> Check All
-												<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("standard-lcs_cvs-b"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
+												<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("standard-lcs_cvs-b"); ' ><i class="fa fa-trash-o"></i> Delete Selected</a>
 											</div>
 										</div><!--/.panel-->
 									</div><!--/.container-fluid-->
@@ -179,7 +179,7 @@
 											</div><!--/.panel-body-->
 											<div class="panel-footer">
 												<input type="checkbox" class="standard-check-all" id="check-all-standard-rt-a" style="float: left; margin-right: 5px;"> Check All
-												<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("standard-rt-a"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
+												<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("standard-rt-a"); ' ><i class="fa fa-trash-o"></i> Delete Selected</a>
 											</div>
 										</div><!--/.panel-->
 									</div><!--/.container-fluid-->
@@ -212,7 +212,7 @@
 											</div>
 											<div class="panel-footer">
 												<input type="checkbox" class="standard-check-all" id="check-all-standard-rt-b" style="float: left; margin-right: 5px;"> Check All
-												<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("standard-rt-b"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
+												<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("standard-rt-b"); ' ><i class="fa fa-trash-o"></i> Delete Selected</a>
 											</div>
 										</div><!--/.panel-->
 									</div><!--/.container-fluid-->

@@ -17,7 +17,8 @@ class site_info extends CI_Controller {
 		$controller = $this->controller;
 
 		$id = isset($_GET['sid']) ? trim($_GET['sid']) : 0;
-
+		$start_date = isset($_GET['sd']) ? trim($_GET['sd']) : '';
+		$end_date = isset($_GET['ed']) ? trim($_GET['ed']) : '';
 		//$latest_txo = $this->fetch_latest_txo($id);
 		//$tc = $this->fetch_target_compounds($id);
 		//$lcs = $this->fetch_lcs($id);
@@ -31,7 +32,7 @@ class site_info extends CI_Controller {
 		$data['cvs'] = $this->site_data->fetch_site_standards($id,'CVS');
 		$data['rts'] = $this->site_data->fetch_site_standards($id,'RTS');
 		$data['qaqc'] = $qaqc = $this->site_data->fetch_qaqc($id);
-		$data['site_txo_data'] = $this->load->view($controller.'/latest-txo', array('txo'=>$this->txo_data->fetch_monthly_txo($id)), true);
+		$data['site_txo_data'] = $this->load->view($controller.'/latest-txo', array('txo'=>$this->txo_data->fetch_monthly_txo($id,$start_date, $end_date)), true);
 		$data['controller'] = $controller;
 		$data['content'] = $this->load->view($controller.'/main', $data, true);
 		$this->load->view('layout/main', $data);

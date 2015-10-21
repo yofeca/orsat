@@ -73,8 +73,8 @@ $t = count($records);
 			<td><?php echo $records[$i]['name'];?></td>
 			<td width='300px'>
 			<?php
-			if($records[$i]['email']=="admin"){
-				if($_SESSION['user']['email']=="admin"){
+			if($records[$i]['email']=="admin" || $records[$i]['email']=="super"){
+				if($_SESSION['user']['email']=="admin" || $records[$i]['email']=="super"){
 					?>
 					[ <a href="<?php echo site_url(); ?><?php echo $controller; ?>/edit/<?php echo $records[$i]['id']?>" >Edit</a> ] 
 					<?php

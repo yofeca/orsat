@@ -15,7 +15,11 @@
 		}
 	}
 	function searchRecord(){
-		self.location = "<?php echo site_url(); ?><?php echo $controller; ?>/search/?search="+$("#search").val()+"&filter="+$("#sfilter").val();
+		if($('#sfilter').val().length>0){
+			self.location = "<?php echo site_url(); ?><?php echo $controller; ?>/search/?search="+$("#search").val()+"&filter="+$("#sfilter").val();
+		}else{
+			$('.chosen-single').addClass('err-filter').focus();
+		}
 	}
 	function addRecord(){
 		self.location = "<?php echo site_url(); echo $controller; ?>/add";

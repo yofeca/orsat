@@ -162,8 +162,10 @@ class airs_list extends CI_Controller {
 			
 			//fields		
 			$sql .= "   `aqi_no` = '".mysql_real_escape_string($_POST['aqi_no'])."'";
-$sql .= " , `component_name` = '".mysql_real_escape_string($_POST['component_name'])."'";
-$sql .= " , `cas` = '".mysql_real_escape_string($_POST['cas'])."'";
+			$sql .= " , `component_name` = '".mysql_real_escape_string($_POST['component_name'])."'";
+			$sql .= " , `carbon_no` = '".mysql_real_escape_string($_POST['carbon_no'])."'";
+			$sql .= " , `alias` = '".mysql_real_escape_string($_POST['alias'])."'";
+			$sql .= " , `cas` = '".mysql_real_escape_string($_POST['cas'])."'";
 
 			
 			$this->db->query($sql);										
@@ -192,6 +194,21 @@ $sql .= " , `cas` = '".mysql_real_escape_string($_POST['cas'])."'";
 		alertX("Successfully deleted.");
 		<?php		
 		exit();
+	}
+
+	public function ajax_check_aqi($aqi){
+		if(!$aqi) return;
+
+		$sql = "SELECT * FROM `airs_list` WHERE aqi_no = '".$aqi."' LIMIT 1";
+		$q = $this->db->query($sql);
+		$record = $q->result_array();
+		
+		if($record){
+			echo json_encode(array('dup'=>true));
+		}else{
+			echo json_encode(array('dup'=>false));
+		}
+
 	}
 }
 ?>

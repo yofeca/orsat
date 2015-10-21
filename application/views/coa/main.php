@@ -1,7 +1,7 @@
 <script>
 $(document).ready(function(){
 	$('input[name="add"]').on('click',function(){ coa.add(); });
-	$('input[name="search"]').on('click',function(){ coa.search(); });
+	$('input[name="bsearch"]').on('click',function(){ coa.search(); });
 	$('.delete').on('click',function(){
 		var id = $(this).attr('id').replace('rec-','');
 		coa.delete(id);
@@ -91,7 +91,7 @@ $(document).ready(function(){
 							</select>
 						</div>
 					</div>
-					<input type='button' class='btn btn-default' value='search' name="search">
+					<input type='button' class='btn btn-default' value='search' name="bsearch">
 					<input type='button' class='btn btn-default' value='add' name="add">
 				</form>
 				<?php
@@ -189,7 +189,7 @@ $(document).ready(function(){
 								<div class="panel-heading" style="display: block;">Components</div>
 								<div class="panel-body">
 									<div clas="table-responsive">
-										<h5><b>Channel A</b></h5>
+										<h5 class="channel-heading"><b>Channel A</b></h5>
 										<table class="table table-striped table-bordered" id="channel-a">
 											<thead>
 												<tr>
@@ -198,7 +198,7 @@ $(document).ready(function(){
 												</tr>
 											</thead>
 										</table>
-										<h5><b>Channel B</b></h5>
+										<h5 class="channel-heading"><b>Channel B</b></h5>
 										<table class="table table-striped table-bordered" id="channel-b">
 											<thead>
 												<tr>

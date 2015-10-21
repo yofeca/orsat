@@ -15,7 +15,11 @@
 		}
 	}
 	function searchRecord(){
-		self.location = "<?php echo site_url(); ?><?php echo $controller; ?>/search/?search="+$("#search").val()+"&filter="+$("#sfilter").val();
+		if($('#sfilter').val().length>0){
+			self.location = "<?php echo site_url(); ?><?php echo $controller; ?>/search/?search="+$("#search").val()+"&filter="+$("#sfilter").val();
+		}else{
+			$('.chosen-single').addClass('err-filter').focus();
+		}
 	}
 	function addRecord(){
 		self.location = "<?php echo site_url(); echo $controller; ?>/add";
@@ -76,7 +80,9 @@
 		</div><!--/.panel.panel-default-->
 	</div>
 </div>
-
+<style>
+	#dt-wrapper th, #dt-wrapper td{ font-size: 12px; white-space: nowrap; }
+</style>
 <div class="row">
 	<div class="container-fluid">
 		<div class="panel panel-default" id="panel-table">
@@ -89,6 +95,7 @@
 								<!--<th>#</th>-->
 								<!--th>ID</th-->
 								<th>Filename</th>
+								<th>Data Acquisition Time</th>
 								<th>Date</th>
 								<!--th>Sample ID</th-->
 								<th>Sample Name</th>
@@ -96,7 +103,6 @@
 								<!--th>Site ID</th-->
 								<th>Instrument Name</th>
 								<th>Channel</th>
-								<th>Data Acquisition Time</th>
 								<th>Cycle</th>
 								<th>Raw Data File</th>
 								<th>Instrument Method</th>
@@ -115,15 +121,15 @@
 							<tr id="tr<?php echo htmlentitiesX($records[$i]['id']); ?>">
 								<!--<td><?php echo $start+$i+1; ?></td>-->
 								<!--td><a href="<?php echo site_url(); ?><?php echo $controller; ?>/edit/<?php echo $records[$i]['id']?>" ><?php echo htmlentitiesX($records[$i]['id']); ?></a></td-->	
-								<td><a href="<?php echo site_url(); ?><?php echo $controller; ?>/edit/<?php echo $records[$i]['id']?>" ><?php echo $records[$i]['filename'];?></a></td>
+								<td><a href="<?php echo site_url(); ?><?php echo $controller; ?>/edit/<?php echo $records[$i]['filename']?>" ><?php echo $records[$i]['filename'];?></a></td>
 								<td><?php echo $records[$i]['date'];?></td>
+								<td><?php echo $records[$i]['data_acquisition_time'];?></td>
 								<!--td><?php echo $records[$i]['sample_type_id'];?></td-->
 								<td><?php echo $records[$i]['sample_name'];?></td>
 								<td><?php echo $records[$i]['sample_number'];?></td>
 								<!--td><?php echo $records[$i]['site_id'];?></td-->
 								<td><?php echo $records[$i]['instrument_name'];?></td>
 								<td><?php echo $records[$i]['channel'];?></td>
-								<td><?php echo $records[$i]['data_acquisition_time'];?></td>
 								<td><?php echo $records[$i]['cycle'];?></td>
 								<td><?php echo $records[$i]['raw_data_file'];?></td>
 								<td><?php echo $records[$i]['inst_method'];?></td>

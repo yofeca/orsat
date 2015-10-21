@@ -105,7 +105,7 @@ class coa extends CI_Controller {
 			redirect(site_url($controller));
 		}
 
-		$data['values'] = $this->component_data->fetch_standard_components('','edit',$id);
+		$data['values'] = $this->component_data->fetch_standard_components('',$id);
 		$data['record'] = $record;
 		$data['controller'] = $controller;
 		$data['content'] = $this->load->view($controller.'/add', $data, true);		
@@ -117,8 +117,8 @@ class coa extends CI_Controller {
 		$controller = $this->controller;
 
 		$data['standard'] = (isset($standard)) ? $standard : 'lcs_cvs';
-		$data['lcs_cvs'] = $this->component_data->fetch_standard_components('LCS_CVS','add','');
-		$data['rts'] = $this->component_data->fetch_standard_components('RTS','add','');
+		$data['lcs_cvs'] = $this->component_data->fetch_standard_components('LCS_CVS','');
+		$data['rts'] = $this->component_data->fetch_standard_components('RTS','');
 		$data['controller'] = $controller;
 		$data['content'] = $this->load->view($controller.'/add', $data, true);
 		$this->load->view('layout/main', $data);;

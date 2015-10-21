@@ -114,7 +114,7 @@
 										<div class="description"><?php echo $tceq_a[$i]['component_name']; echo ($tceq_a[$i]['alias']) ? '[ '.$tceq_a[$i]['alias'].' ]': ""; ?></div>
 										<div class="options">
 											<a style='color: red; cursor:pointer; text-decoration: underline' onclick='deleteRecord("<?php echo htmlentitiesX($tceq_a[$i]['id']) ?>"); ' ><i class="fa fa-trash-o"></i></a>
-											<a href="<?php echo site_url(); ?>airs_list/edit/<?php echo $tceq_a[$i]['airs_list_id']?>" ><i class="fa fa-pencil-square-o"></i></a>
+											<a href="<?php echo site_url(); ?>airs_list/edit/<?php echo $tceq_a[$i]['id']?>" ><i class="fa fa-pencil-square-o"></i></a>
 										</div>
 										
 									</li>
@@ -125,7 +125,7 @@
 						</div>
 						<div class="panel-footer">
 							<input type="checkbox" class="tceq-check-all" id="check-all-tceq-a" style="float: left; margin-right: 5px;"> Check All
-							<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("tceq-a"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
+							<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("tceq-a"); ' ><i class="fa fa-trash-o"></i> Delete selected</a>
 						</div>
 					</div><!--/.panel-->
 				</div><!--/.col-sm-6-->
@@ -135,6 +135,7 @@
 						<div class="panel-body">
 							<ul id="sortable-b" class="sortable">
 								<?php
+								
 								$t = count($tceq_b);
 								for($i=0; $i<$t; $i++){
 								?>
@@ -144,7 +145,7 @@
 										<div class="description"><?php echo $tceq_b[$i]['component_name']; echo ($tceq_b[$i]['alias']) ? '[ '.$tceq_b[$i]['alias'].' ]': ""; ?></div>
 										<div class="options">
 											<a style='color: red; cursor:pointer; text-decoration: underline' onclick='deleteRecord("<?php echo htmlentitiesX($tceq_b[$i]['id']) ?>"); ' ><i class="fa fa-trash-o"></i></a>
-											<a href="<?php echo site_url(); ?>airs_list/edit/<?php echo $tceq_b[$i]['airs_list_id']?>" ><i class="fa fa-pencil-square-o"></i></a>
+											<a href="<?php echo site_url(); ?>airs_list/edit/<?php echo $tceq_b[$i]['id']?>" ><i class="fa fa-pencil-square-o"></i></a>
 										</div>
 										
 									</li>
@@ -155,7 +156,7 @@
 						</div>
 						<div class="panel-footer">
 							<input type="checkbox" class="tceq-check-all" id="check-all-tceq-b" style="float: left; margin-right: 5px;"> Check All
-							<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("tceq-b"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
+							<a style='color: red; cursor:pointer; text-decoration: none' onclick='deleteAllRecord("tceq-b"); ' ><i class="fa fa-trash-o"></i> Delete Selected</a>
 						</div>
 					</div><!--/.panel-->
 				</div><!--/.col-sm-6-->

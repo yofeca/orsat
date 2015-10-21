@@ -3,39 +3,71 @@
 $sid = session_id()."_".time();
 ?>
 <script>
-function saveRecord(approve){	
+function saveRecord(approve){
+
 	extra = "";
-	jQuery("#savebutton").val("Saving...");
-	formdata = jQuery("#record_form").serialize();
-	jQuery("#record_form *").attr("disabled", true);
-	jQuery.ajax({
-		<?php
-		if($record['id']){
-			?>url: "<?php  echo site_url(); echo $controller ?>/ajax_edit"+extra,<?php
-		}
-		else{
-			?>url: "<?php echo site_url(); echo $controller ?>/ajax_add"+extra,<?php
-		}
-		?>
-		type: "POST",
-		data: formdata,
-		dataType: "script",
-		success: function(data){
-			//alert(data);
-		}
-	});	
-	
+	formdata = $("#record_form").serialize();
+
+	if("<?php echo $record['id'] ?>"){
+		$("#savebutton").val("Saving...");
+		$("#record_form *").attr("disabled", true);
+		$.ajax({
+			url: "<?php  echo site_url(); echo $controller ?>/ajax_edit"+extra,
+			type: "POST",
+			data: formdata,
+			dataType: "script",
+			success: function(data){
+				//alert(data);
+			}
+		});
+	}else{
+		var aqi = $('input[name="aqi_no"]');
+		aqidata = 'aqi='+aqi;
+		proceed = true;
+		$.ajax({
+			url: "<?php  echo site_url(); echo $controller ?>/ajax_check_aqi/"+aqi.val(),
+			type: "POST",
+			data: aqidata,
+			dataType: "JSON",
+			success: function(data){
+				
+				var proceed = true;
+
+				if(data.dup){
+					aqi.focus();
+					aqi.addClass('has-error');
+					$('.aqi-help-block').show();
+					proceed = false;
+				}
+
+				if(proceed){
+					formdata = $("#record_form").serialize();
+					$("#savebutton").val("Saving...");
+					$("#record_form *").attr("disabled", true);
+					$.ajax({
+						url: "<?php echo site_url(); echo $controller ?>/ajax_add"+extra,
+						type: "POST",
+						data: formdata,
+						dataType: "script",
+						success: function(data){
+							//alert(data);
+						}
+					});
+				}
+			}
+		});
+	}
 }
 function deleteRecord(co_id){
 	if(confirm("Are you sure you want to delete this record?")){
 		formdata = "id="+co_id;
-		jQuery.ajax({
+		$.ajax({
 			url: "<?php echo site_url(); echo $controller ?>/ajax_delete/"+co_id,
 			type: "POST",
 			data: formdata,
 			dataType: "script",
 			success: function(){
-				jQuery("#tr"+co_id).fadeOut(200);
+				$("#tr"+co_id).fadeOut(200);
 				self.location = "<?php echo site_url(); echo $controller ?>";
 			}
 		});
@@ -43,7 +75,11 @@ function deleteRecord(co_id){
 	}
 }
 </script>
-
+<style>
+	input.has-error{
+		border: 1px solid #FF0000 !important;
+	}
+</style>
 <input type='hidden' id='tempcreatelabel' />
 <div class="row">
 	<div class="col-sm-6 col-sm-offset-3">
@@ -76,6 +112,7 @@ function deleteRecord(co_id){
 						<label for="aqi_no" class="col-sm-4 control-label">AQI</label>
 						<div class="col-sm-8">
 							<input type="text" name="aqi_no" size="40" class="form-control" placeholder="Enter AQI">
+							<small class='aqi-help-block' style="display:none">Cannot add duplicate AQI number.</small>
 						</div>
 					</div>
 					<div class="form-group">
@@ -126,7 +163,7 @@ function deleteRecord(co_id){
 		foreach($record as $key=>$value){	
 			if(trim($value)||1){
 				?>
-				jQuery('[name="<?php echo $key; ?>"]').val("<?php echo sanitizeX($value); ?>");
+				$('[name="<?php echo $key; ?>"]').val("<?php echo sanitizeX($value); ?>");
 				<?php
 			}		
 		}

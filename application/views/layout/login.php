@@ -23,13 +23,13 @@
 				<span class="input-group-addon"><i class="fa fa-key"></i></span>
 					<input placeholder="Password" class='form-control' type='password' id='password' name='password'>
 				</div>
-				<div class="form-group">
+				<!--div class="form-group">
 					<label class="cr-styled">
 						<input type="checkbox" ng-model="todo.done">
 						<i class="fa"></i> 
 					</label>
 						Remember me
-				</div>
+				</div-->
 				<input id="submit-login" class='btn btn-default btn-block btn-xs' type='submit' value='Log In'>
 			</form>
 		</div>

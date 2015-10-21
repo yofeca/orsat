@@ -154,8 +154,8 @@ class user_permissions extends CI_Controller {
 			/*fields*/
 			//$sql .= " `name` = '".db_escape($_POST['name'])."'" ;							
 			$sql .= "   `user_group` = '".mysql_real_escape_string($_POST['user_group'])."'";
-$sql .= " , `class_name` = '".mysql_real_escape_string($_POST['class_name'])."'";
-$sql .= " , `function` = '".mysql_real_escape_string($_POST['function'])."'";
+			$sql .= " , `class_name` = '".mysql_real_escape_string($_POST['class_name'])."'";
+			$sql .= " , `function` = '".mysql_real_escape_string($_POST['function'])."'";
 
 			$this->db->query($sql);										
 			?>

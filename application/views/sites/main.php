@@ -16,7 +16,11 @@
 	}
 
 	function searchRecord(){
-		self.location = "<?php echo site_url(); ?><?php echo $controller; ?>/search/?search="+$("#search").val()+"&filter="+$("#sfilter").val();
+		if($('#sfilter').val().length>0){
+			self.location = "<?php echo site_url(); ?><?php echo $controller; ?>/search/?search="+$("#search").val()+"&filter="+$("#sfilter").val();
+		}else{
+			$('.chosen-single').addClass('err-filter').focus();
+		}
 	}
 	
 	function addRecord(){
@@ -117,8 +121,8 @@
 								<tr id="tr<?php echo htmlentitiesX($records[$i]['id']); ?>">
 									<!--<td><?php echo $start+$i+1; ?></td>-->
 									<!--<td><?php echo htmlentitiesX($records[$i]['id']); ?></td>-->
-									<td><a href="<?php echo site_url(); ?>site_info?sid=<?php echo $records[$i]['id']?>" ><?php echo $records[$i]['instrument_name'];?></a></td>
-									<td><a href="<?php echo site_url(); ?>network/<?php echo $records[$i]['network_id']?>" ><?php echo $records[$i]['network_name'];?></a></td>
+									<td data-id="test"><a href="<?php echo site_url(); ?>site_info?sid=<?php echo $records[$i]['id']?>" ><?php echo $records[$i]['instrument_name'];?></a></td>
+									<td><a href="<?php echo site_url(); ?>network/edit/<?php echo $records[$i]['network_name']?>" ><?php echo $records[$i]['network_name'];?></a></td>
 									<td><?php echo $records[$i]['site_designator'];?></td>
 									<td><?php echo $records[$i]['aqs_no'];?></td>
 									<td><?php echo $records[$i]['short_name'];?></td>

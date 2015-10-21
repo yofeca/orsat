@@ -8,6 +8,10 @@ class component_data extends CI_Model {
 		$this->load->database();
     }
 
+	/***
+	 * @param string $ch
+	 * @return mixed
+	 */
 	public function fetch_airs_file($ch=""){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 
@@ -58,26 +62,32 @@ class component_data extends CI_Model {
 
 		return $records;
 	}
-
-	public function fetch_standard_components($type,$event,$id){
+	
+	/**
+	 * [fetch_standard_components description]
+	 * @param  string $type  [lcs,cvs,rts]
+	 * @param  int $id    	 [canister/certificate analysis id]
+	 * @return Array()       [description]
+	 */
+	public function fetch_standard_components($type,$id){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
-
-		if($event=='edit'){
+		if($id){
 			$sql = "SELECT al.*, al.id as airs_list_id, cc.value, t.channel, t.sort FROM `airs_list` al 
 			RIGHT JOIN `tceq` t ON al.id=t.airs_list_id RIGHT JOIN `coa_components` cc ON cc.airs_list_id=t.airs_list_id WHERE cc.coa_id='$id'";
 			if($type){
 				$sql .= " AND cc.type='$type'";
 			}
-			$sql .= " ORDER BY t.sort ASC";
+			
 		}else{
 			$sql = "SELECT sc.id, t.id as tceq_id, al.id AS airs_list_id, al.cas, al.component_name, al.alias, al.carbon_no, t.channel, t.sort FROM `airs_list` al 
-			RIGHT JOIN `tceq` t ON al.id=t.airs_list_id RIGHT JOIN `standard_components` sc ON sc.airs_list_id=t.airs_list_id WHERE sc.type='$type' ORDER BY t.sort ASC";	
+			RIGHT JOIN `tceq` t ON al.id=t.airs_list_id RIGHT JOIN `standard_components` sc ON sc.airs_list_id=t.airs_list_id WHERE sc.type='$type'";	
 		}
-
+		$sql .= " ORDER BY t.channel, t.sort ASC";
 		$q = $this->db->query($sql);
 		$records = $q->result_array();
 		return $records;
 	}
+
 	public function fetch_standard_tceq_components($type,$channel){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 
@@ -87,5 +97,55 @@ class component_data extends CI_Model {
 		$q = $this->db->query($sql);
 		$records = $q->result_array();
 		return $records;
+	}
+
+	public function fetch_rts_summary($date,$site_id){
+		/*$sql = "SELECT td.id, td.filename, td.data_acquisition_time, td.channel, ttc.pp_carbon, ttc.area, ttc.method_rt
+		FROM `txo_dumps` td
+		LEFT JOIN `txo_total_components` ttc ON td.id=ttc.txo_dump_id
+		WHERE DATE_FORMAT(td.data_acquisition_time, '%Y-%m-%d') = DATE_FORMAT('$date','%Y-%m-%d') AND td.site_id = '$site_id'
+		ORDER BY td.data_acquisition_time";*/
+		
+		$rts_summary = array();
+
+		$sql = "SELECT `component_name`, `channel`, AVG(`time`) as value
+		FROM `component_values` 
+		WHERE DATE_FORMAT(`data_acquisition_time`,'%Y-%m-%d')=DATE_FORMAT('$date','%Y-%m-%d') 
+		AND `site_id`='$site_id' GROUP BY `component_name` ";
+		
+		$q = $this->db->query($sql);
+		$avg = $q->result_array();
+		$rts_summary['average'] = $avg;
+
+
+		$sql = "SELECT `component_name`, `channel`, STDDEV(`time`) as value
+		FROM `component_values` 
+		WHERE DATE_FORMAT(`data_acquisition_time`,'%Y-%m-%d')=DATE_FORMAT('$date','%Y-%m-%d') 
+		AND `site_id`='$site_id' GROUP BY `component_name` ORDER BY `channel` ASC";
+		
+		$q = $this->db->query($sql);
+		$avg = $q->result_array();
+		$rts_summary['stdev'] = $avg;
+
+
+		$sql = "SELECT `component_name`, `channel`, MIN(`time`) as value
+		FROM `component_values` 
+		WHERE DATE_FORMAT(`data_acquisition_time`,'%Y-%m-%d')=DATE_FORMAT('$date','%Y-%m-%d') 
+		AND `site_id`='$site_id' GROUP BY `component_name` ORDER BY `channel` ASC";
+		
+		$q = $this->db->query($sql);
+		$avg = $q->result_array();
+		$rts_summary['min'] = $avg;
+
+		$sql = "SELECT `component_name`, `channel`, MAX(`time`) as value
+		FROM `component_values` 
+		WHERE DATE_FORMAT(`data_acquisition_time`,'%Y-%m-%d')=DATE_FORMAT('$date','%Y-%m-%d') 
+		AND `site_id`='$site_id' GROUP BY `component_name` ORDER BY `channel` ASC";
+		
+		$q = $this->db->query($sql);
+		$avg = $q->result_array();
+		$rts_summary['max'] = $avg;
+
+		return $rts_summary;
 	}
 }

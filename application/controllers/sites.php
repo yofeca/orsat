@@ -247,7 +247,9 @@ class sites extends CI_Controller {
 
 		echo json_encode($data[0]);
 	}
+
 	public function ajax_add_lcs_standard(){
+
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 		$response = array();
 
@@ -257,22 +259,24 @@ class sites extends CI_Controller {
 		parse_str($_POST['data'], $data);
 		extract($data);
 
-		$dateon = date('Y-m-d H:i:s', strtotime($date_on));
-		$dateoff = ($date_off=='') ? date('Y-m-d H:i:s', strtotime('0000-00-00 00:00:00')) : date('Y-m-d H:i:s', strtotime($date_off));
+		//$dateon = date('Y-m-d H:i:s', strtotime($date_on));
+		//$dateoff = ($date_off=='') ? 'NULL' : date('Y-m-d H:i:s', strtotime($date_off));
 
 		$sql = "INSERT INTO `standards` SET";
 		$sql .= " `coa_id` = '".mysql_real_escape_string($cylinder_id)."'";
-		$sql .= " , `date_on` = '".$dateon."'";
-		$sql .= " , `date_off` = '".$dateoff."'";
+		$sql .= " , `date_on` = '".date('Y-m-d H:i:s', strtotime($date_on))."'";
+		$sql .= " , `date_off` = '".($date_off=='') ? NULL : date('Y-m-d H:i:s', strtotime($date_off))."'";
 		$sql .= " , `value` = '".mysql_real_escape_string($dilution_factor)."'";
 		$sql .= " , `site_id` = '".mysql_real_escape_string($lcs_site_id)."'";
 		$sql .= " , `type` = '".mysql_real_escape_string($standard_type)."'";
 		$q = $this->db->query($sql);
 
-		$response['id'] = $this->db->insert_id();
+		//$response['id'] = $this->db->insert_id();
 
-		echo json_encode($response);
+		echo json_encode( array( 'id' => $this->db->insert_id() ) );
+
 	}
+
 	function ajax_update_lcs_standard($id=''){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 
@@ -282,13 +286,13 @@ class sites extends CI_Controller {
 		parse_str($_POST['data'], $data);
 		extract($data);
 		
-		$dateon = date('Y-m-d H:i:s', strtotime($date_on));
-		$dateoff = ($date_off=='') ? 'NULL' : date('Y-m-d H:i:s', strtotime($date_off));
+		//$dateon = date('Y-m-d H:i:s', strtotime($date_on));
+		//$dateoff = ($date_off=='') ? 'NULL' : date('Y-m-d H:i:s', strtotime($date_off));
 
 		$sql = "UPDATE `standards` SET ";
 		$sql .= " `coa_id` = '".mysql_real_escape_string($cylinder_id)."'";
-		$sql .= " , `date_on` = '".$dateon."'";
-		$sql .= " , `date_off` = '".$dateoff."'";
+		$sql .= " , `date_on` = '".date('Y-m-d H:i:s', strtotime($date_on))."'";
+		$sql .= " , `date_off` = '".($date_off=='') ? NULL : date('Y-m-d H:i:s', strtotime($date_off))."'";
 		$sql .= " , `value` = '".mysql_real_escape_string($dilution_factor)."'";
 		$sql .= " , `site_id` = '".mysql_real_escape_string($lcs_site_id)."'";
 		$sql .= " , `type` = '".mysql_real_escape_string($standard_type)."'";
@@ -335,7 +339,7 @@ class sites extends CI_Controller {
 		$sql = "INSERT INTO `standards` SET";
 		$sql .= " `coa_id` = '".mysql_real_escape_string($cylinder_id)."'";
 		$sql .= " , `date_on` = '".date('Y-m-d H:i:s', strtotime($date_on))."'";
-		$sql .= " , `date_off` = '".date('Y-m-d H:i:s', strtotime($date_off))."'";
+		$sql .= " , `date_off` = '".($date_off=='') ? NULL : date('Y-m-d H:i:s', strtotime($date_off))."'";
 		$sql .= " , `value` = '".mysql_real_escape_string($dilution_factor)."'";
 		$sql .= " , `site_id` = '".mysql_real_escape_string($cvs_site_id)."'";
 		$sql .= " , `type` = '".mysql_real_escape_string($standard_type)."'";
@@ -357,7 +361,7 @@ class sites extends CI_Controller {
 		$sql = "UPDATE `standards` SET ";
 		$sql .= " `coa_id` = '".mysql_real_escape_string($cylinder_id)."'";
 		$sql .= " , `date_on` = '".date('Y-m-d H:i:s', strtotime($date_on))."'";
-		$sql .= " , `date_off` = '".date('Y-m-d H:i:s', strtotime($date_off))."'";
+		$sql .= " , `date_off` = '".($date_off=='') ? NULL : date('Y-m-d H:i:s', strtotime($date_off))."'";
 		$sql .= " , `value` = '".mysql_real_escape_string($dilution_factor)."'";
 		$sql .= " , `site_id` = '".mysql_real_escape_string($cvs_site_id)."'";
 		$sql .= " , `type` = '".mysql_real_escape_string($standard_type)."'";
@@ -404,7 +408,7 @@ class sites extends CI_Controller {
 		$sql = "INSERT INTO `standards` SET";
 		$sql .= " `coa_id` = '".mysql_real_escape_string($cylinder_id)."'";
 		$sql .= " , `date_on` = '".date('Y-m-d H:i:s', strtotime($date_on))."'";
-		$sql .= " , `date_off` = '".date('Y-m-d H:i:s', strtotime($date_off))."'";
+		$sql .= " , `date_off` = '".($date_off=='') ? NULL : date('Y-m-d H:i:s', strtotime($date_off))."'";
 		$sql .= " , `value` = '".mysql_real_escape_string($dilution_factor)."'";
 		$sql .= " , `site_id` = '".mysql_real_escape_string($rts_site_id)."'";
 		$sql .= " , `type` = '".mysql_real_escape_string($standard_type)."'";
@@ -426,7 +430,7 @@ class sites extends CI_Controller {
 		$sql = "UPDATE `standards` SET ";
 		$sql .= " `coa_id` = '".mysql_real_escape_string($cylinder_id)."'";
 		$sql .= " , `date_on` = '".date('Y-m-d H:i:s', strtotime($date_on))."'";
-		$sql .= " , `date_off` = '".date('Y-m-d H:i:s', strtotime($date_off))."'";
+		$sql .= " , `date_off` = '".($date_off=='') ? NULL : date('Y-m-d H:i:s', strtotime($date_off))."'";
 		$sql .= " , `value` = '".mysql_real_escape_string($dilution_factor)."'";
 		$sql .= " , `site_id` = '".mysql_real_escape_string($rts_site_id)."'";
 		$sql .= " , `type` = '".mysql_real_escape_string($standard_type)."'";

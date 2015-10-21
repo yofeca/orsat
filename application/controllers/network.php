@@ -96,15 +96,25 @@ class network extends CI_Controller {
 			redirect(site_url($controller));
 		}
 		
-		$sql = "SELECT * FROM `".$table."` WHERE `id` = '".db_escape($id)."' LIMIT 1";
+		$num = is_numeric($id);
+
+		$sql = "SELECT * FROM `".$table."`";
+		if($num){
+			$sql .= " WHERE `id`='$id'";
+		}else{
+			$sql .= "  WHERE `name`='$id'";
+		}
+
+		$sql .= " LIMIT 1";
+
 		$q = $this->db->query($sql);
 		$record = $q->result_array();
 		$record = $record[0];
-		
+
 		if(!trim($record['id'])){
 			redirect(site_url($controller));
 		}
-
+		$id = $record['id'];
 		$data = array();
 		$data['network_id'] = $id;
 		$data['target_a'] = $this->component_data->fetch_network_target_components('A',$id);
@@ -114,7 +124,7 @@ class network extends CI_Controller {
 		$data['record'] = $record;
 		$data['controller'] = $controller;
 		$data['content'] = $this->load->view($controller.'/add', $data, true);		
-		$this->load->view('layout/main', $data);;
+		$this->load->view('layout/main', $data);
 	}
 		
 	public function add(){	
@@ -173,7 +183,7 @@ class network extends CI_Controller {
 
 			?>
 			alertX("Successfully Updated Record.");
-			//self.location = "<?php echo site_url($controller."/edit/".$_POST['id']); ?>";
+			self.location = "<?php echo site_url($controller."/edit/".$_POST['id']); ?>";
 			<?php
 		}
 		?>jQuery("#record_form *").attr("disabled", false);<?php

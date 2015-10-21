@@ -137,4 +137,12 @@ class site_data extends CI_Model {
 		
 		return $records;
 	}
+
+	public function rmExtraChar($str){
+		
+		$extra_char = array(" ","-",",");
+		$str = str_replace($extra_char, "", $str);
+
+		return $str;
+	}
 }

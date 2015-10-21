@@ -10,9 +10,9 @@ function pre($a){
 
 function fetch_txo($filepath){
 	$filename = basename($filepath);
-	$sql = "SELECT * FROM `txo_dumps` WHERE `filename`='" . mysql_real_escape_string($filename) . "'";
+	$sql = "SELECT id, filename FROM `txo_dumps` WHERE `filename`='" . mysql_real_escape_string($filename) . "' LIMIT 1";
 	$r = dbQuery($sql);
-	return $r;
+	return $r[0];
 }
 
 function fetch_site($instrument_name){	
@@ -227,7 +227,7 @@ function get_files($path="") {
 
 	}else{
 
-		$sql = "SELECT filename FROM `files` WHERE `flag`='0' LIMIT 500";
+		$sql = "SELECT filename FROM `files` WHERE `flag`='0' LIMIT 1000";
 		$r = dbQuery($sql);
 
 		return $r;
@@ -244,7 +244,8 @@ $path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
 $p = get_files();
 
 if($p){ //check if there are files not processed
-	for($i=count($p)-1; $i>=0; $i--){
+	$count = count($p) - 1;
+	for($i=$count; $i>=0; $i--){
 		if(parseTXO($path."\\".$p[$i]['filename'])){
 			echo "TXO File Successfully Imported!\n";
 		}else{

@@ -1,9 +1,16 @@
-<?php
-	$controller = $this->router->class;
-	$method = $this->router->method;
-?>
+	<?php
+		$controller = $this->router->class;
+		$method = $this->router->method;
+	?>
 
 	<?php
+	if($this->user_validation->validate("main", "index", false)){
+		?>
+		<li <?php if($controller=="main"){ echo "class='selected'"; } ?> onclick='self.location="<?php echo site_url("main");?>"'>
+			<a href='<?php echo site_url("main");?>'>Dashboard</a>
+		</li>
+		<?php
+	}
 	if($this->user_validation->validate("sites", "index", false)){
 		?>
 		<li <?php if($controller=="sites"){ echo "class='selected'"; } ?> onclick='self.location="<?php echo site_url("sites");?>"'>
@@ -78,4 +85,11 @@
 		</li>
 		<?php
 	}*/
+	if($this->user_validation->validate("sample_types", "index", false)){
+		?>
+		<li <?php if($controller=="sample_types"){ echo "class='selected'"; } ?> onclick='self.location="<?php echo site_url("sample_types");?>"'>
+			<a href='<?php echo site_url("sample_types");?>'>Sample Types</a>
+		</li>
+		<?php
+	}
 /*[[MENU]]*/

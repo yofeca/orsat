@@ -17,8 +17,8 @@ class standards extends CI_Controller {
 		$controller = $this->controller;	
 		
 		$data = array();
-		$data['lcs_cvs'] = $this->component_data->fetch_standard_components('LCS_CVS','','');
-		$data['rt'] = $this->component_data->fetch_standard_components('RTS','','');
+		$data['lcs_cvs'] = $this->component_data->fetch_standard_components('LCS_CVS','');
+		$data['rt'] = $this->component_data->fetch_standard_components('RTS','');
 		$data['controller'] = $controller;
 		$data['content'] = $this->load->view($controller.'/main', $data, true);
 		$this->load->view('layout/main', $data);

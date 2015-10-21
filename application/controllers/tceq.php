@@ -16,13 +16,13 @@ class tceq extends CI_Controller {
 		$table = $this->table;
 		$controller = $this->controller;	
 		
-		$data = array();
-		$data['tceq_a'] = $this->component_data->fetch_tceq('A');
-		$data['tceq_b'] = $this->component_data->fetch_tceq('B');
+		$data               = array();
+		$data['tceq_a']     = $this->component_data->fetch_tceq('A');
+		$data['tceq_b']     = $this->component_data->fetch_tceq('B');
 		$data['airsfile_a'] = $this->component_data->fetch_airs_file('A');
 		$data['airsfile_b'] = $this->component_data->fetch_airs_file('B');
 		$data['controller'] = $controller;
-		$data['content'] = $this->load->view($controller.'/main', $data, true);
+		$data['content']    = $this->load->view($controller.'/main', $data, true);
 		$this->load->view('layout/main', $data);
 	}
 
@@ -38,7 +38,8 @@ class tceq extends CI_Controller {
 
 		foreach ($item as $k => $v){
 			$sort_number = $k + 1;
-			$sql = "UPDATE `".$table."` SET sort=$sort_number WHERE id=$v";
+			$sql = "UPDATE `".$table."` SET sort=$sort_number WHERE airs_list_id=$v";
+			echo $sql;
 			$q = $this->db->query($sql);
 		}
 	}

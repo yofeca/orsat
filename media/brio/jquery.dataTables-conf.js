@@ -6,7 +6,11 @@ $(document).ready(function() {
 	Basic Data Table
 	************************************/
     //$('#basic-datatable').dataTable();
-	$('#dt-wrapper').dataTable(); 
+	var table = $('#dt-wrapper').dataTable();
+    /*$('#dt-wrapper tbody').on('click','tr', function(){
+        console.log(table.row(this).data());
+    });*/
+
     $('#txo-dumps').dataTable({scrollX: true, ordering:false});
 	$('#site-list').dataTable();
     $('.cylinder-table').dataTable({ordering:false});    
@@ -25,11 +29,6 @@ $(document).ready(function() {
         // Toggle the visibility
         column.visible( ! column.visible() );
     });
-	
-	
-	
-	
-	
 	
 	/* Formatting function for row details - modify as you need */
 	function format ( d ) {

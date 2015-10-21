@@ -15,7 +15,7 @@ class user_validation extends CI_Model {
 			return false;
 		}
 		//echo $class."-".$method;
-		if($_SESSION['user']['email']=="admin"){ //return true to all if admin
+		if($_SESSION['user']['email']=="super" || $_SESSION['user']['email']=="admin"){ //return true to all if admin
 			return true;
 		}
 		else{

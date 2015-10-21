@@ -152,7 +152,8 @@ $(function(){
 		$('#datetimepicker').datetimepicker();
 		$('#datepicker').datetimepicker({pickTime: false});
 		$('#timepicker').datetimepicker({pickDate: false});
-		
+		$('#tx-filterdate').datetimepicker({pickTime: false});
+
 		$('#datetimerangepicker1').datetimepicker();
 		$('#datetimerangepicker2').datetimepicker();
 		$("#datetimerangepicker1").on("dp.change",function (e) {

@@ -4,9 +4,10 @@
 								$('#add-cvs-modal').on('show.bs.modal', function(event){
 									var button = $(event.relatedTarget);
 									cvs.id = button.data('option');
-
 									if(cvs.id>0){
 										cvs.edit(cvs.id);
+									}else{
+										cvs.init();
 									}
 								});
 								$('#save-cvs').on("click", function(){
@@ -18,13 +19,19 @@
 									id: 0,
 									site_id: 0,
 									site_name: "",
+									init: function(){
+										$('input[name="date_on"]').val('');
+										$('input[name="date_off"]').val('');
+										$('select[name="cylinder_id"]').val('').trigger("chosen:updated");
+										$('input[name="dilution_factor"]').val('');
+									},
 									save: function(){
 										var formdata = $("#cvs-cylinder-form").serialize();
 										var target = '';
-										
+										console.log(formdata);
 										if(this.id>0) target = 'update_cvs_standard/'+this.id;
 										else target = 'add_cvs_standard/'+this.id;
-										
+
 										$.post(
 											'<?php echo site_url(); echo $controller; ?>/ajax_'+target,
 											{ 'data': formdata }
@@ -39,7 +46,7 @@
 										).done(function(data){
 											d = JSON.parse(data);
 
-											$('select[name="cylinder_id"]').val(d.coa_id);
+											$('select[name="cylinder_id"]').val(d.coa_id).trigger("chosen:updated");
 											$('input[name="date_on"]').val(d.date_on);
 											$('input[name="date_off"]').val(d.date_off);
 											$('input[name="dilution_factor"]').val(d.value);
@@ -81,13 +88,14 @@
 														</tr>
 													</thead>
 													<tbody>
-														<?php 
+														<?php
+														
 														for($i=0; $i<$cvs_total; $i++){
 															?>
 														<tr id="cvs-<?php echo $cvs[$i]['id']; ?>">
-															<td><a href="#"><?php echo $cvs[$i]['cylinder']; ?></a></td>
+															<td><a href="<?php echo site_url('/coa/edit') . '/' . $cvs[$i]['coa_id'];?>"><?php echo $cvs[$i]['cylinder']; ?></a></td>
 															<td><?php echo $cvs[$i]['date_on']; ?></td>
-															<td><?php echo ($cvs[$i]['date_off'] != NULL) ? $cvs[$i]['date_off'] : ''; ?></td>
+															<td><?php echo ($cvs[$i]['date_off'] != NULL) ? $cvs[$i]['date_off'] : 'In Use'; ?></td>
 															<td><?php echo $cvs[$i]['value']; ?></td>
 															<td>
 																<a href="javascript:;" data-option="<?php echo htmlentitiesX($cvs[$i]['id']); ?>" data-target="#add-cvs-modal" data-toggle="modal"><i class="fa fa-pencil-square-o"></i></a>
@@ -146,7 +154,10 @@
 												<div class="form-group">
 													<label class="col-sm-3 control-label">Blend Ratio</label>
 													<div class="col-sm-7">
-														<input class="form-control form-control-flat input-sm inputmask" type="text" name="dilution_factor" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true" style="text-align: right;" placeholder="0.00">
+														<input 
+															class="form-control form-control-flat input-sm inputmask" type="text" name="dilution_factor" 
+															data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'autoGroup': true, 'digitsOptional': false, 'placeholder': '0'" 
+														 	style="text-align: right;" placeholder="0.00">
 													</div>
 												</div>
 											</form>

@@ -45,9 +45,9 @@
 									?>
 								</td>
 								<td>
-									<a class="btn btn-default" href="<?php echo site_url(); ?>quick_looks?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=amount">Amount</a>
-									<a class="btn btn-default" href="<?php echo site_url(); ?>quick_looks?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=area">Area</a>
-									<a class="btn btn-default" href="<?php echo site_url(); ?>quick_looks?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=time">Time</a>
+									<a class="btn btn-default" href="<?php echo site_url(); ?>site_quick_look?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=amount">Amount</a>
+									<a class="btn btn-default" href="<?php echo site_url(); ?>site_quick_look?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=area">Area</a>
+									<a class="btn btn-default" href="<?php echo site_url(); ?>site_quick_look?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=time">Time</a>
 								</td>
 							</tr>
 							<?php

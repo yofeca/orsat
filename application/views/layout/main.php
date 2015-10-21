@@ -44,10 +44,16 @@
     <link rel="stylesheet" href="<?php echo site_url('media/brio/bootstrap-datetimepicker.css'); ?>" />
 	
 	<link rel="stylesheet" type="text/css" href="<?php echo site_url("media/app.v1.css?_=".time()); ?>" />
+	<script>
+		function generate(){
+			formdata = $('#quicklook-filter').serialize();
+			self.location =  "<?php echo site_url(); ?>quick_looks?"+formdata;
+		}
+	</script>
 </head>
 
 <body class="<?php echo isset($controller) ? $controller: 'page-login'; ?>">
-	
+
 	<div id='imagepreload' class='hidden'>
 		<img src='<?php echo site_url("media/check.png"); ?>' />
 		<img src='<?php echo site_url("media/x.png"); ?>' />
@@ -100,120 +106,93 @@
 					</nav>
 					<style>
 						.dropdown-menu.filter.lg{
-							width: 600px !important;
+							width: 400px !important;
 						}
 						header.container-fluid{ margin-bottom: 30px !important; }
 					</style>
 					<ul class="nav-toolbar">
 						<li class="dropdown"><a href="#" data-toggle="dropdown"><i class="fa fa-search"></i></a>
 							<div class="dropdown-menu filter lg pull-right arrow panel panel-default arrow-top-right">
-								<div class="panel-heading">
-									Generate Reports
-								</div>
-								<div class="panel-body text-center">
-									<div class="row">
-										<form class="form-inline" action="<?php echo site_url(); ?>filter" method="post">
-											<input type="hidden" value="<?php echo $instrument_name; ?>" name="sitename">
-												<?php
-													$y = date("Y");
-												?>
+								<div class="panel-heading">Quick Looks</div>
+								<div class="panel-body">
+										<form class="form-horizontal" role="form" onsubmit="return false;">
+										
+											<?php
+											$sites = $this->site_data->fetch_sites();
+											?>
 
-												<div class="row">
-
-													<div class="form-group">
-														<label for"site">Site</label>
-														<select id="site" name="site" class="form-control">
-															<?php
-																if($sites){
-																	$sc = count($sites);
-																	for($i=0; $i<$sc; $i++){
-																		echo '<option value="'.$sites[$i]['id'].'">'.$sites[$i]['instrument_name'].'</option>';
-																	}
+											<div class="form-group">
+												<label for"site" class="col-sm-3 control-label">Site</label>
+												<div class="col-sm-8">
+													<select id="site" name="site" class="chosen-select" data-placeholder="Choose Site">
+														<option></option>
+														<?php
+															if($sites){
+																$sc = count($sites);
+																for($i=0; $i<$sc; $i++){
+																	echo '<option value="'.$sites[$i]['id'].'">'.$sites[$i]['instrument_name'].'</option>';
 																}
-															?>
-														</select>
-													</div>
-													<div class="form-group">
-														<select id="start-year" name="year" class="form-control">
-															<option value="0">Year</option>
-															<?php for($i=$y; $i>=1970; $i--){ ?>
-															<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-															<?php } ?>
-														</select>
-													</div>
-												</div>
-												<div class="row">
-												Start:
-													<div class="form-group">
-														<?php
-															$month_names = array("January","February","March","April","May","June","July","August","September","October","November","December");
-															echo '<select id="start-month" name="start-month" class="form-control">';
-															echo '<option value="0">Month</option>';
-															$i=1;
-															foreach($month_names as $month) {
-																echo '<option value="' . $i .'">'.$month.'</option>';
-																$i++;
 															}
-															echo "</select>";
 														?>
-													</div>
-													<div class="form-group">
-														<select id="start-day" name="start-day" class="form-control">
-															<option value="0">Day</option>
-															<?php for($i=1; $i<=31; $i++){ ?>
-															<option value="<?php echo ($i<=9) ? "0". $i : $i; ?>"><?php echo $i; ?></option>
-															<?php } ?>
-														</select>
-													</div>
-													<div class="form-group">
-														<select id="start-hour" name="start-hour" class="form-control">
-															<option value="0">Hour</option>
-															<?php $i=1; foreach(range('A','X') as $c){ ?>
-															<option value="<?php echo ($i<=9) ? "0". $i : $i; ?>"><?php echo $c; ?></option>
-															<?php $i++; } ?>
-														</select>
-													</div>
+													</select>
 												</div>
-												<div class="row">
-												End:
-													<div class="form-group">
-														<?php
-															$month_names = array("January","February","March","April","May","June","July","August","September","October","November","December");
-															echo '<select id="end-month" name="end-month" class="form-control">';
-															echo '<option value="0">Month</option>';
-															$i=1;
-															foreach($month_names as $month) {
-																echo '<option value="' . $i .'">'.$month.'</option>';
-																$i++;
-															}
-															echo "</select>";
-														?>
-													</div>
-													<div class="form-group">
-														<select id="end-day" name="end-day" class="form-control">
-															<option value="0">Day</option>
-															<?php for($i=1; $i<=31; $i++){ ?>
-															<option value="<?php echo ($i<=9) ? "0". $i : $i; ?>"><?php echo $i; ?></option>
-															<?php } ?>
-														</select>
-													</div>
-													<div class="form-group">
-														<select id="end-hour" name="end-hour" class="form-control">
-															<option value="0">Hour</option>
-															<?php $i=1; foreach(range('A','X') as $c){ ?>
-															<option value="<?php echo ($i<=9) ? "0". $i : $i; ?>"><?php echo $c; ?></option>
-															<?php $i++; } ?>
-														</select>
-													</div>
+											</div>
+							
+											<div class="form-group">
+												<label for"site" class="col-sm-3 control-label">Start Date:</label>
+												<div class="col-sm-8">
+													<input class="input-sm form-control filterdatetimepicker" type="text" name="start_date" placeholder="yyyy-mm-dd">
 												</div>
-												<button type="submit" class="btn btn-success">Search</button>
+											</div>
+
+											<div class="form-group">
+												<label for"site" class="col-sm-3 control-label">End Date:</label>
+												<div class="col-sm-8">
+													<input class="input-sm form-control filterdatetimepicker" type="text" name="end_date" placeholder="yyyy-mm-dd">
+												</div>
+											</div>
+											<!--div class="form-group">
+												<div class="col-sm-offset-3 col-sm-9">
+												  <label class="cr-styled"><input type="checkbox" name="cha"><i class="fa"></i></label>
+												    Channel A
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-sm-offset-3 col-sm-9">
+												  <label class="cr-styled"><input type="checkbox" name="chb"><i class="fa"></i></label>
+												    Channel B
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-sm-offset-3 col-sm-9">
+												  <label class="cr-styled"><input type="checkbox" name="lcs"><i class="fa"></i></label>
+												    LCS
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-sm-offset-3 col-sm-9">
+												  <label class="cr-styled"><input type="checkbox" name="cvs"><i class="fa"></i></label>
+												    CVS
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-sm-offset-3 col-sm-9">
+												  <label class="cr-styled"><input type="checkbox" name="rts"><i class="fa"></i></label>
+												    RTS
+												</div>
+											</div-->
+											<div class="form-group">
+												<div class="col-sm-offset-3 col-sm-8">
+													<button class="btn btn-success" id="bt-gen-filter">Go!</button>
+												</div>
+											</div>
 										</form>
-									</div>
+										
 								</div>
 							</div>
-						</li>
-						<?php if ($user['id']==1&&$user['name']=="Super Admin"){
-							?>
+						</li><!--General Search-->
+						<?php if ($user['email']=="super" || $user['email']=="admin"){
+						?>
 						<li class="dropdown"><a href="#" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
 							<div class="dropdown-menu lg pull-right arrow panel panel-default arrow-top-right">
 								<div class="panel-heading">
@@ -223,7 +202,12 @@
 									<div class="row">
 										<div class="col-xs-4 col-sm-4"><a href="<?php echo site_url("users");?>" class="text-red"><span class="h2"><i class="fa fa-users"></i></span><p class="text-gray no-margn">Users</p></a></div>
 										<div class="col-xs-4 col-sm-4"><a href="<?php echo site_url("user_permissions");?>" class="text-green"><span class="h2"><i class="fa fa-user-secret"></i></span><p class="text-gray no-margn">Permissions</p></a></div>
+										<?php if ($user['id']==1&&$user['email']=="super"){
+										?>
 										<div class="col-xs-4 col-sm-4"><a href="<?php echo site_url("admin/createcms");?>" class="text-blue"><span class="h2"><i class="fa fa-file-text-o"></i></span><p class="text-gray no-margn">Create CMS</p></a></div>
+										<?php 
+										}
+										?>
 									</div>
 								</div>
 							</div>
@@ -274,7 +258,35 @@
 			
 		</footer>
 		</section>
+		<style>
+			.err{ background: #F7C6C6 !important; }
+		</style>
+		<script>
+			$(document).ready(function(){
+				$('#bt-gen-filter').on('click', function(){
+					var sid =  $('#site');
+					var sd = $('input[name="start_date"]');
+					var ed = $('input[name="end_date"]');
 
+					if(!sid.val()){
+						$('#site_chosen .chosen-single').focus();
+						$('#site_chosen .chosen-single').addClass('err');
+						return;
+					}
+					if(!sd.val()){
+						sd.addClass('err');
+						sd.focus();
+						return;
+					}
+					if(!ed.val()){
+						ed.addClass('err');
+						ed.focus();
+						return;
+					}
+					self.location = "<?php echo site_url(); ?>site_info" + "?sid=" + sid.val() + '&sd=' + sd.val() + '&ed=' + ed.val();
+				});
+			});
+		</script>
 		<!-- InputMask -->
 	    <script src="<?php echo site_url('media/brio/jquery.inputmask.bundle.js'); ?>"></script>
 		<!-- TagsInput -->

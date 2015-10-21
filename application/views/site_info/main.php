@@ -52,7 +52,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="row" style="margin-top: 15px">
 	<style>
 		.tab-content .panel ul li {
 		    list-style-type: none;
@@ -61,7 +61,6 @@
 		    font-size: 13px;
 		    height: 2em;
 		    line-height: 1.2em;
-		    border-bottom: 1px solid #ccc;
 		}
 		.tab-content .panel ul{ padding-left: 0;}
 	</style>
@@ -73,6 +72,21 @@
 			<li><a href="#cvs-information" role="tab" data-toggle="tab"><span class="hidden-xs">CVS Information</a></li>
 			<li><a href="#rts-information" role="tab" data-toggle="tab"><span class="hidden-xs">RTS Information</a></li>
 			<li><a href="<?php echo site_url(); ?>sites/edit/<?php echo $id; ?>" role="tab"><span class="hidden-xs">Edit</a></li>
+			<li style="float: right; width: 360px">
+				    <div class="input-group" style="width: 150px; float: left; ">
+				      <input type="text" class="form-control" id="tx-filter-start-date" placeholder="Start date...">
+<!-- 				      <span class="input-group-btn">
+  <button class="btn btn-default" type="button" id="bt-filtedate">Go!</button>
+</span> -->
+				    </div><!-- /input-group -->
+				   	<div class="input-group" style="width: 150px; float: left;">
+				      <input type="text" class="form-control" id="tx-filter-end-date" placeholder="End date...">
+<!-- 				      <span class="input-group-btn">
+  <button class="btn btn-default" type="button" id="bt-filtedate">Go!</button>
+</span> -->
+				    </div><!-- /input-group -->
+				    <button class="btn btn-default" type="button" id="bt-filtedate" style="float:left; margin-left: 5px">Go!</button>
+			</li>
 		</ul>
 
 		<div class="tab-content">
@@ -200,6 +214,24 @@
 	</div>
 </div>
 
+<div class="modal fade" id="modal-filter">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title">Modal title</h4>
+			</div>
+			<div class="modal-body">
+			<p>One fine body&hellip;</p>
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
 	//var map;
@@ -224,4 +256,12 @@
 		});
 	}
 	google.maps.event.addDomListener(window, 'load', initialize);
+
+	$(document).ready(function(){
+		$('#bt-filtedate').on('click', function(){
+			var sd = $('#tx-filter-start-date').val();
+			var ed = $('#tx-filter-end-date').val();
+			self.location = "<?php echo site_url(); ?>site_info?sid=<?php echo $id; ?>" + '&sd=' + sd + '&ed=' + ed;
+		});
+	});
 </script>

@@ -49,14 +49,15 @@ $active_group = 'default';
 $active_record = TRUE;
 
 if(false){
-	$db['default']['hostname'] = '192.168.0.5';
-	$db['default']['username'] = 'dms';
-	$db['default']['password'] = 'er6up8aUJqEpCjDA';
+	$db['default']['hostname'] = 'localhost';
+	$db['default']['username'] = 'orsat';
+	$db['default']['password'] = 'y!G=HO#;-%{i';
 }else{
 	$db['default']['hostname'] = 'localhost';
 	$db['default']['username'] = 'root';
 	$db['default']['password'] = '';
 }
+
 $db['default']['database'] = 'orsat';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';

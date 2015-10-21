@@ -15,7 +15,11 @@
 		}
 	}
 	function searchRecord(){
-		self.location = "<?php echo site_url(); ?><?php echo $controller; ?>/search/?search="+$("#search").val()+"&filter="+$("#sfilter").val();
+		if($('#sfilter').val().length>0){
+			self.location = "<?php echo site_url(); ?><?php echo $controller; ?>/search/?search="+$("#search").val()+"&filter="+$("#sfilter").val();
+		}else{
+			$('.chosen-single').addClass('err-filter').focus();
+		}
 	}
 	function addRecord(){
 		self.location = "<?php echo site_url(); echo $controller; ?>/add";
@@ -38,9 +42,9 @@
 							<select name='filter' id='sfilter' class="form-control chosen-select" data-placeholder="Choose a Filter">
 								<option></option>
 								<option value="aqi_no">AQI #</option>
-								<option value="component_name">Component</option>	
-								<option value="alias">Component</option>
-								<option value="carbon_no">Component</option>	
+								<option value="component_name">Component Name</option>	
+								<option value="alias">Alias</option>
+								<option value="carbon_no">Carbon No</option>	
 								<option value="cas">CAS</option>	
 							</select>
 						</div>

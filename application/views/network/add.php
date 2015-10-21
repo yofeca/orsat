@@ -94,7 +94,6 @@ function removeAllRecords(co_id){
 				url: "<?php echo site_url(); echo $controller ?>/ajax_remove_all_target_component/"+'<?php echo $record['id']; ?>',
 				type: "POST",
 				data: formdata,
-				dataType: "json",
 				success: function(){
 					$("#list-item-"+co_id).fadeOut(200);
 					self.location = "<?php echo site_url(); echo $controller ?>/edit/<?php echo $network_id; ?>";
@@ -181,6 +180,7 @@ function removeAllRecords(co_id){
   	.list-group-item{ padding-top: 0; padding-bottom: 0; }
   	.ui-state-disabled{ background: #333333 !important; }
   	.ui-state-disabled button{ float: right; }
+  	
 </style>
 <input type='hidden' id='tempcreatelabel' />
 <div class="row">
@@ -264,7 +264,7 @@ function removeAllRecords(co_id){
 								</div>
 								<div class="panel-footer">
 									<input type="checkbox" class="check-all" id="check-all-target_a" style="float: left; margin-right: 5px;"> Check All
-									<a style='color: red; cursor:pointer; text-decoration: none' onclick='removeAllRecords("target_a"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
+									<a style='color: red; cursor:pointer; text-decoration: none' onclick='removeAllRecords("target_a"); ' ><i class="fa fa-trash-o"></i> Delete Selected</a>
 								</div>
 							</div><!--/.panel-->
 						</div><!--/.col-sm-6-->
@@ -294,7 +294,7 @@ function removeAllRecords(co_id){
 								</div>
 								<div class="panel-footer">
 									<input type="checkbox" class="check-all" id="check-all-target_b" style="float: left; margin-right: 5px;"> Check All
-									<a style='color: red; cursor:pointer; text-decoration: none' onclick='removeAllRecords("target_b"); ' ><i class="fa fa-trash-o"></i> Delete All</a>
+									<a style='color: red; cursor:pointer; text-decoration: none' onclick='removeAllRecords("target_b"); ' ><i class="fa fa-trash-o"></i> Delete Selected</a>
 								</div>
 							</div><!--/.panel-->
 						</div><!--/.col-sm-6-->
