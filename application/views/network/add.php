@@ -151,8 +151,12 @@ function removeAllRecords(co_id){
 					type: "POST",
 					data: formdata,
 					dataType: "json",
-					success: function(){
-						self.location = "<?php echo site_url(); echo $controller ?>/edit/<?php echo $network_id; ?>";
+					success: function(data){
+						if(data.result){
+							self.location = "<?php echo site_url(); echo $controller ?>/edit/<?php echo $network_id; ?>";
+						}else{
+							alertX("Something went wrong, delete error.")
+						}
 					}
 				});
 			}

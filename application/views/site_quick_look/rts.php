@@ -199,6 +199,9 @@ $(document).ready(function(){
 	$average_count = count($average);
 	$min_count = count($min);
 	$max_count = count($max);
+
+	$tma = count($modea);
+	$tmb = count($modeb);
 ?>
 <div class="panel panel-default">
 <div class="panel-heading"><?php echo $site_info['instrument_name'] . ' - ' . $site_info['short_name']; ?> Daily Quick Look <a href="<?php echo site_url('site_info') ?>?sid=<?php echo $site_info['id'] ?>" style="font-weight: normal; font-size: 12px">Back to Site Info.</a></div>
@@ -257,7 +260,7 @@ $(document).ready(function(){
 						
 						for($i=0; $i<$tha; $i++){
 							?>
-								<th class="text-center th-labels-a" id="<?php echo strtolower($headera[$i]['component_name']); ?>"><?php echo (false) ? $headera[$i]['alias'] : $headera[$i]['component_name']; ?></th>
+								<th class="text-center th-labels-a" id="<?php echo strtolower($headera[$i]['component_name']); ?>"><?php echo ($headera[$i]['alias']) ? $headera[$i]['alias'] : $headera[$i]['component_name']; ?></th>
 							<?php
 						}
 					?>
@@ -344,18 +347,16 @@ $(document).ready(function(){
 						<?php
 							for($i = 0; $i<$tha; $i++){
 								$match = false;
-								for($j=0; $j<$average_count; $j++){
-									if($average[$j]['channel']=='A'){
+								for($j=0; $j<$tma; $j++){
 										$header = substr(str_replace($extra_char, "", $headera[$i]['component_name']),0,10);
-										$component = substr(str_replace($extra_char, "", $average[$j]['component_name']),0,10);
-										$value = $average[$j]['value'];
-
+										$component = substr(str_replace($extra_char, "", $modea[$j]['component_name']),0,10);
+										$value = $modea[$j]['time'];
 										if($header==$component){
 											$match = true;
-											echo '<td class="text-center" data-value="'.$value.'">'. round(0, 2) .'</td>';
+											echo '<td class="text-center" data-value="'.$value.'">'. round($value, 2) .'</td>';
 											break;
 										}
-									}
+									
 								}
 								if(!$match){
 									echo '<td class="value text-center" data-value="n/a">n/a</td>';
@@ -464,7 +465,7 @@ $(document).ready(function(){
 						
 						for($i=0; $i<$thb; $i++){
 							?>
-								<th class="text-center th-labels-b" id="<?php echo strtolower($headerb[$i]['component_name']); ?>"><?php echo (false) ? $headerb[$i]['alias'] : $headerb[$i]['component_name']; ?></th>
+								<th class="text-center th-labels-b" id="<?php echo strtolower($headerb[$i]['component_name']); ?>"><?php echo ($headerb[$i]['alias']) ? $headerb[$i]['alias'] : $headerb[$i]['component_name']; ?></th>
 							<?php
 						}
 					?>
@@ -551,18 +552,16 @@ $(document).ready(function(){
 						<?php
 							for($i = 0; $i<$thb; $i++){
 								$match = false;
-								for($j=0; $j<$average_count; $j++){
-									if($average[$j]['channel']=='B'){
+								for($j=0; $j<$tmb; $j++){
 										$header = substr(str_replace($extra_char, "", $headerb[$i]['component_name']),0,10);
-										$component = substr(str_replace($extra_char, "", $average[$j]['component_name']),0,10);
-										$value = $average[$j]['value'];
-
+										$component = substr(str_replace($extra_char, "", $modeb[$j]['component_name']),0,10);
+										$value = $modeb[$j]['time'];
 										if($header==$component){
 											$match = true;
-											echo '<td class="text-center" data-value="'.$value.'">'. round(0, 2) .'</td>';
+											echo '<td class="text-center" data-value="'.$value.'">'. round($value, 2) .'</td>';
 											break;
 										}
-									}
+									
 								}
 								if(!$match){
 									echo '<td class="value text-center" data-value="n/a">n/a</td>';

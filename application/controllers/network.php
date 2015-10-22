@@ -180,10 +180,10 @@ class network extends CI_Controller {
 				$sql .= " WHERE `network_id` = '$id' AND `tceq_id` = '".mysql_real_escape_string($itemsb[$i])."'";
 				$this->db->query($sql);
 			}*/
-
+			//echo site_url() . $controller."/edit/". $id; 
 			?>
 			alertX("Successfully Updated Record.");
-			self.location = "<?php echo site_url($controller."/edit/".$_POST['id']); ?>";
+			self.location = "<?php echo site_url() . $controller."/edit/". $id; ?>";
 			<?php
 		}
 		?>jQuery("#record_form *").attr("disabled", false);<?php
@@ -290,8 +290,8 @@ class network extends CI_Controller {
 		$id = db_escape($id);
 		$sql = "DELETE FROM `network_target_components` where airs_list_id = '".$_POST['aid']."' AND network_id=$id";
 		$q = $this->db->query($sql);
-		echo $sql;
-		return true;
+	
+		echo json_encode(array('result'=>true));
 	}
 
 	public function ajax_remove_all_target_component($network_id){

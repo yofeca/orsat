@@ -146,6 +146,48 @@ class component_data extends CI_Model {
 		$avg = $q->result_array();
 		$rts_summary['max'] = $avg;
 
+		//fetch_mode
 		return $rts_summary;
+	}
+
+	public function fetch_mode($date,$site_id,$channel,$header){
+		$extra_char = array(" ","-",",");
+		$th = count($header);
+		$mode = array();
+
+		for($i=0; $i<$th; $i++){
+			$new_header = str_replace($extra_char, "", $header[$i]['component_name']);
+			$sql = "SELECT component_name, time, channel,occurs
+					FROM
+						(
+							SELECT time,channel,component_name,occurs FROM 
+								(
+									SELECT component_name, channel, time, count(*) as occurs
+									FROM `component_values`
+									WHERE DATE_FORMAT(`data_acquisition_time`,'%Y-%m-%d') = DATE_FORMAT('$date','%Y-%m-%d') 
+									AND `channel`= '$channel' AND `site_id`='$site_id' 
+									AND REPLACE(REPLACE(REPLACE(`component_name`,' ',''),'-',''),',','') ='$new_header'
+									GROUP BY time
+								)T1,
+								(
+									SELECT count(*) as maxoccurs
+									FROM `component_values`
+									WHERE DATE_FORMAT(`data_acquisition_time`,'%Y-%m-%d') = DATE_FORMAT('$date','%Y-%m-%d') 
+									AND `channel`= '$channel' AND `site_id`='$site_id' 
+									AND REPLACE(REPLACE(REPLACE(`component_name`,' ',''),'-',''),',','') ='$new_header'
+									GROUP BY time
+									ORDER BY count(*) DESC
+									LIMIT 1
+								)T3
+							WHERE T1.occurs = T3.maxoccurs
+						)T4
+					GROUP BY occurs";
+
+			$q = $this->db->query($sql);
+			$result = $q->result_array();
+			$mode[$i] = $result[0];
+		}
+		//$this->txo_data->printr($mode);
+		return $mode;
 	}
 }

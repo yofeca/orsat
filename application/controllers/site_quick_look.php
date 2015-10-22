@@ -35,13 +35,17 @@ class site_quick_look extends CI_Controller {
 		$data = array();
 
 		$data['site_info'] = $site;
-		
-		$data['headera'] = $this->component_data->fetch_network_target_components('A',$network_id);
-		$data['headerb'] = $this->component_data->fetch_network_target_components('B',$network_id);
+		$headera = $this->component_data->fetch_network_target_components('A',$network_id);
+		$headerb = $this->component_data->fetch_network_target_components('B',$network_id);
+
+		$data['headera'] = $headera;
+		$data['headerb'] = $headerb;
 		$data['txo'] = $txo;
 		$data['controller'] = $controller;
 
 		if($view=='time'){
+			$data['modea'] = $this->component_data->fetch_mode($date,$site_id,'A',$headera);
+			$data['modeb'] = $this->component_data->fetch_mode($date,$site_id,'B',$headerb);
 			$data['standards'] = $this->component_data->fetch_standard_components('RTS','');
 			$data['rts_summary'] = $this->component_data->fetch_rts_summary($date,$site_id);
 			$data['rts'] = $this->txo_data->fetch_daily_standards($date,$site_id,'Q','');
