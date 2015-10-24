@@ -1,5 +1,5 @@
 <?php
-//home/larry/public_html
+//home/larry/public_html/txoparser/database.php
 include_once("D:\\xampp\\htdocs\\orsat\\txoparser\\database.php");
 
 function pre($a){
@@ -12,7 +12,7 @@ function fetch_txo($filepath){
 	$filename = basename($filepath);
 	$sql = "SELECT id, filename FROM `txo_dumps` WHERE `filename`='" . mysql_real_escape_string($filename) . "' LIMIT 1";
 	$r = dbQuery($sql);
-	return $r[0];
+	return $r;
 }
 
 function fetch_site($instrument_name){	
@@ -59,21 +59,19 @@ function convert_to_date($str){
 
 function parseTXO($filepath){ //filepath should be absolute path of the file
 
-	$site_name = $channel = $sample_name = $data_acquisition_time='';
-	
-	$filename = basename($filepath);
-
-	$csv = array_map('str_getcsv', file($filepath));
-
-	$totalcsv = count($csv);
+	if(! file_exists($filepath) ) return; //double check if the file really exists in directory
 
 	$r = fetch_txo($filepath); //fetch txo
 	
-	if(!isset($r[0])){	
+	if(! isset($r) ){//if txo not inserted	
 	
-		//start of header loop array
+		$site_name = $channel = $sample_name = $data_acquisition_time='';
+		$filename = basename($filepath);
+		$csv = array_map('str_getcsv', file($filepath)); //convert csv file to array
+		$totalcsv = count($csv);
+
 		$header_counter = 1;
-		for($i=1; $i<$totalcsv; $i++){
+		for($i=1; $i<$totalcsv; $i++){//start of header loop array
 			
 			$t = count($csv[$i]); $key = ""; $value = "";
 
@@ -120,7 +118,6 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 
 
 		$file_year = date('Y',strtotime($data_acquisition_time)); //get the year of the file
-	
 		$site_id = fetch_site($site_name); //check site exist, otherwise add
 		$sample_type_id = fetch_sample_type($filename,$sample_name);
 
@@ -132,12 +129,11 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 			".implode(", ", $sqlext);
 
 		$sql = str_replace(", `` = ''","",$sql); //removes unnecessary columns ex. `` = ''
-
 		$r = dbQuery($sql);
 		$txo_insert_id = $r['mysql_insert_id'];
 
-		//column values (PLOT A / PLOT B)
-		for($i=$header_counter+6; $i<$totalcsv; $i++){
+		
+		for($i=$header_counter+6; $i<$totalcsv; $i++){ //column values (PLOT A / PLOT B)
 			
 			$subtotalcsv_count = count($csv[$i]);
 			
@@ -191,7 +187,7 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 					}
 				}
 			}
-		}//end of plot loop
+		}//end of column values (PLOT A / PLOT B)
 
 		//$sql = "UPDATE `files` SET flag='1' WHERE filename='" . $filename . "'";
 		$sql = "DELETE FROM `files` WHERE filename='" . $filename . "'";
@@ -200,7 +196,149 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 		unlink($filepath);
 		return true;
 
-	} //end of dQuery();
+	}//end of txo not inserted
+
+	else{//if txo exists
+
+		if(! file_exists($filepath) ) return; //double check if the file really exists in directory
+		
+		$site_name = $channel = $sample_name = $data_acquisition_time='';
+		$filename = $r[0]['filename'];
+		$txo_id = $r[0]['id'];
+		$csv = array_map('str_getcsv', file($filepath)); //convert csv file to array
+		$totalcsv = count($csv);
+	
+		echo "updating $txo_id - $filename";
+
+		$header_counter = 1;
+		for($i=1; $i<$totalcsv; $i++){
+			
+			$t = count($csv[$i]); $key = ""; $value = "";
+
+			for($j=0; $j<$t; $j++){
+				
+				$index = trim($csv[$i][$j]);
+				if(substr($index, -5, 5) != "====="){
+					
+					if(substr($index, -1, 1)==":"){
+						$value = "";
+						$key = trim(trim($csv[$i][$j]), ":");
+						//get the values
+						for($k=($j+1); $k<$t; $k++){
+							$index = trim($csv[$i][$k]);
+							if(!(substr($index, -1, 1)==":")){
+								$value .= trim($csv[$i][$k])." ";
+							}
+							else{
+								$k=$t;
+							}
+						}
+						$key = trim($key);
+						$key = str_replace(' #', '', $key);
+						$key = str_replace(array(' ', '/'), '_', $key);
+
+						if(strtolower($key)=='date') $value = convert_to_date($value);
+						if(strtolower($key)=='data_acquisition_time'){
+							$value = convert_to_date($value);
+							$data_acquisition_time = $value;
+						}
+						$sqlext[] = "`". strtolower($key) ."` = '".mysql_real_escape_string(trim($value))."'";
+
+						if(strtolower($key)=='instrument_name') $site_name = mysql_real_escape_string(trim($value));
+						if(strtolower($key)=='channel') $channel = mysql_real_escape_string(trim($value));
+						if(strtolower($key)=='sample_name') $sample_name = mysql_real_escape_string(trim($value));
+					}
+				}else{
+					break 2;
+				}
+			}
+
+			$header_counter++;
+		}//end of header loop array
+
+
+		$file_year = date('Y',strtotime($data_acquisition_time)); //get the year of the file
+		$site_id = fetch_site($site_name); //check site exist, otherwise add
+		$sample_type_id = fetch_sample_type($filename,$sample_name);
+
+		$sql = "UPDATE `txo_dumps` SET
+			`filename_id` = '" .mysql_real_escape_string($file_year.trim($filename)). "',
+			`filename`='" .mysql_real_escape_string($filename)."',
+			`site_id` = " .$site_id. ",
+			`sample_type_id` = " .$sample_type_id. ",
+			".implode(", ", $sqlext);
+
+		$sql = str_replace(", `` = ''","",$sql); //removes unnecessary columns ex. `` = ''
+		$sql .= " WHERE `filename`='$filename'";
+
+		$r = dbQuery($sql);
+		
+		
+		for($i=$header_counter+6; $i<$totalcsv; $i++){ //column values (PLOT A / PLOT B)
+			
+			$subtotalcsv_count = count($csv[$i]);
+			
+			if($subtotalcsv_count > 4 && (trim($csv[$i][0]) || trim($csv[$i][1]))){
+				
+				$sql = "UPDATE `component_values` SET
+					`peak` = '".mysql_real_escape_string(trim($csv[$i][0]))."',
+					`component_name` = '".mysql_real_escape_string(trim($csv[$i][1]))."',
+					`amount` = '".mysql_real_escape_string(trim($csv[$i][2]))."',
+					`time` = '".mysql_real_escape_string(trim($csv[$i][3]))."',
+					`area` = '".mysql_real_escape_string(trim($csv[$i][4]))."',
+					`filename` = '".mysql_real_escape_string(trim($filename))."',
+					`status` = '0',
+					`site_id` = '".$site_id."',
+					`site_name` = '".$site_name."',
+					`channel` = '".$channel."',
+					`data_acquisition_time` = '".$data_acquisition_time."',
+					`sample_id` = '".$sample_type_id."',
+					`sample_name` = '".$sample_name."' ";
+				
+				if(isset($csv[$i][5])){
+					$sql .= "`method_rt` = '".mysql_real_escape_string(trim($csv[$i][5]))."',";
+				}
+					$sql .= "WHERE `txo_dump_id` = '".$txo_id."'";
+				
+				$r = dbQuery($sql);
+			
+			}else{ 
+
+				//store the total values
+				if( $subtotalcsv_count > 4 ){
+					if($csv[$i][2] == "------" && $csv[$i][4] == "------"){
+						$sql = "UPDATE `txo_total_components` SET
+							`filename` = '".mysql_real_escape_string(trim($filename))."',
+							`pp_carbon` = '".mysql_real_escape_string(trim($csv[$i+1][2]))."',
+							`area` = '".mysql_real_escape_string(trim($csv[$i+1][4]))."',
+							`site_id` = '".$site_id."',
+							`site_name` = '".$site_name."',
+							`channel` = '".$channel."',
+							`data_acquisition_time` = '".$data_acquisition_time."',
+							`sample_id` = '".$sample_type_id."',
+							`sample_name` = '".$sample_name."',";
+						
+						if(isset($csv[$i][5])){
+							$sql .= "`method_rt` = '".mysql_real_escape_string(trim($csv[$i+1][5]))."',";
+						}
+						
+						$sql .= " `ascii_file` = '" . mysql_real_escape_string(trim($csv[$totalcsv-1][1])). "' WHERE `txo_dump_id` = '" . $txo_id . "'";
+						
+						$r = dbQuery($sql);
+						break;
+					}
+				}
+			}
+		}//end of column values (PLOT A / PLOT B)
+
+		//$sql = "UPDATE `files` SET flag='1' WHERE filename='" . $filename . "'";
+		$sql = "DELETE FROM `files` WHERE filename='" . $filename . "'";
+		$r = dbQuery($sql);
+
+		unlink($filepath);
+		return true;
+
+	}//end of txo exists
 
 	return false;
 
@@ -227,7 +365,7 @@ function get_files($path="") {
 
 	}else{
 
-		$sql = "SELECT filename FROM `files` WHERE `flag`='0' LIMIT 1000";
+		$sql = "SELECT filename FROM `files` WHERE `flag`='0' LIMIT 500";
 		$r = dbQuery($sql);
 
 		return $r;
@@ -237,7 +375,7 @@ function get_files($path="") {
 
 //$path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
 //parseTXO($path."\\"."2ABBJ18D.TX0");
-///home/larry/public_html/txoparser
+///home/larry/public_html/txoparser/dumps
 $path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
 
 // $p = get_files($path);
@@ -246,10 +384,11 @@ $p = get_files();
 if($p){ //check if there are files not processed
 	$count = count($p) - 1;
 	for($i=$count; $i>=0; $i--){
+
 		if(parseTXO($path."\\".$p[$i]['filename'])){
-			echo "TXO File Successfully Imported!\n";
+			echo " - Success!\n";
 		}else{
-			echo "TXO File Import Failed! The file is already in the database.\n";
+			echo " - Failed!.\n";
 		}
 	}
 }

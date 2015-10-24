@@ -232,6 +232,9 @@ class txo_dumps extends CI_Controller {
 			if(!$id){
 				$sql = "INSERT INTO `files` SET `filename`='" . $fn ."', `flag`='0'";
 				$q = $this->db->query($sql);
+			}else{
+				$sql = "UPDATE `files` SET `flag` = '0' WHERE `filename` = '".$fn."'";
+				$q = $this->db->query($sql);
 			}
 			//echo json_encode(array('id'=>$id));
 		}
