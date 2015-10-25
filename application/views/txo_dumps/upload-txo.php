@@ -38,6 +38,7 @@ $sid = session_id()."_".time();
 </div>
 <script>
 // Custom example logic
+
 var uploader = new plupload.Uploader({
 	runtimes : 'html5,flash,silverlight,html4',
 	browse_button : 'pickfiles', // you can pass an id...
@@ -47,17 +48,21 @@ var uploader = new plupload.Uploader({
 	silverlight_xap_url : '<?php echo site_url("media/js/plupload/Moxie.xap"); ?>',
 	chunk_size: '200kb',
 	filters : {
-		max_file_size : '3mb',
+		max_file_size : '5mb',
 		mime_types: [
-			{title : "TX0 Files", extensions : "tx0"}
+			{title : "TX0 Files", extensions : "tx0,tX0"},
+			{title : "TX0 Zip Files", extensions : "zip"}
 		]
 	},
 
 	init: {
 		PostInit: function() {
 			$('#filelist').html('');
-
+			
+			
 			$('#uploadfiles').on("click", function(){
+				upload_type =  $('select[name="upload-type"]').val();
+				console.log(upload_type);
 				if(uploader.files.length > 0){
 					if(uploader.files.length != uploader.total.uploaded){
 						uploader.start();

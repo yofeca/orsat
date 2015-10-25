@@ -225,15 +225,17 @@ class txo_dumps extends CI_Controller {
 		for($i=0; $i<$tf; $i++){
 			$fn = $files[$i]->name;
 
+			$extension = substr($fn,-3,3);
+
 			$sql = "SELECT * FROM `files` WHERE `filename`='" . $fn ."'";
 			$q = $this->db->query($sql);
 			$id = $q->row()->id;
 
 			if(!$id){
-				$sql = "INSERT INTO `files` SET `filename`='" . $fn ."', `flag`='0'";
+				$sql = "INSERT INTO `files` SET `filename`='" . mysql_real_escape_string($fn) ."', `type`='" . strtolower($extension) . "', `flag`='0'";
 				$q = $this->db->query($sql);
 			}else{
-				$sql = "UPDATE `files` SET `flag` = '0' WHERE `filename` = '".$fn."'";
+				$sql = "UPDATE `files` SET `flag` = '0', `type`='" . strtolower($extension) . "' WHERE `filename` = '".$fn."'";
 				$q = $this->db->query($sql);
 			}
 			//echo json_encode(array('id'=>$id));

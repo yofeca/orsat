@@ -59,5 +59,6 @@ class site_quick_look extends CI_Controller {
 		
 		$this->load->view('layout/main', $data);
 	}
+
 }
 ?>

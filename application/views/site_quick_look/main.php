@@ -161,6 +161,16 @@ $(document).ready(function(){
 
 		$('#chart-modal').modal('show');
 	});
+
+	$('#bt-next').on('click', function(){
+		var nxturl = "<?php echo site_url(); ?>site_quick_look?dd=<?php echo date('Y-m-d', strtotime('+1 day',strtotime($_GET['dd']))); ?>&sid=<?php echo $_GET['sid']; ?>&v=<?php echo $_GET['v']; ?>";;
+		self.location = nxturl;
+	});
+	$('#bt-previous').on('click', function(){
+		var nxturl = "<?php echo site_url(); ?>site_quick_look?dd=<?php echo date('Y-m-d', strtotime('-1 day',strtotime($_GET['dd']))); ?>&sid=<?php echo $_GET['sid']; ?>&v=<?php echo $_GET['v']; ?>";;
+		self.location = nxturl;
+	});
+
 });
 </script>
 
@@ -181,7 +191,17 @@ $(document).ready(function(){
 </style>
 
 <div class="panel panel-default">
-<div class="panel-heading"><?php echo $site_info['instrument_name'] . ' - ' . $site_info['short_name']; ?> Daily Quick Look <a href="<?php echo site_url('site_info') ?>?sid=<?php echo $site_info['id'] ?>" style="font-weight: normal; font-size: 12px">Back to Site Info.</a></div>
+<div class="panel-heading">
+	<?php 
+		echo $site_info['instrument_name'] . ' - ' . $site_info['short_name']; ?> 
+		Daily Quick Look <a href="<?php echo site_url('site_info') ?>?sid=<?php echo $site_info['id'] ?>" style="font-weight: normal; font-size: 12px">
+		Back to Site Info.</a>
+
+		<div id="site-prev-next" style="float: right; margin-top: -3px;">
+			<button id="bt-previous">Previus</button>
+			<button id="bt-next">Next</button>
+		</div>
+</div>
 <div class="panel-body">
 <!-- Panel wrapper -->
 	<div class="container-fluid">
@@ -784,3 +804,7 @@ $(document).ready(function(){
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+	<script>
+
+	</script>
