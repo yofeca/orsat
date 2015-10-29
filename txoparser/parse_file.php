@@ -19,7 +19,7 @@ function fetch_site($instrument_name){
 
 	$instrument_name = str_replace(" ", "", $instrument_name);
 	
-	$sql = "SELECT id FROM `sites` WHERE `instrument_name` LIKE '%" . strtoupper($instrument_name) . "%' LIMIT 1";
+	$sql = "SELECT id FROM `sites` WHERE UPPER(REPLACE(REPLACE(`instrument_name`,' ',''),'-','')) LIKE '%" . strtoupper(str_replace(array(' ','-'), '', $instrument_name)) . "%' LIMIT 1";
 	$r = dbQuery($sql);
 	
 	if($r){
@@ -97,7 +97,7 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 							}
 						}
 						$key = trim($key);
-						$key = str_replace(' #', '', $key);
+						$key = str_replace('#', '', $key);
 						$key = str_replace(array(' ', '/'), '_', $key);
 
 						if(strtolower($key)=='date') $value = convert_to_date($value);
