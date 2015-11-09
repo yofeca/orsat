@@ -2,25 +2,19 @@
 
 @session_start();
 
-class txo_data extends CI_Model {
-    public function __construct(){
+class txo_data extends CI_Model 
+{
+    public function __construct()
+    {
 		parent::__construct();
 		$this->load->database();
     }
 
-    public function fetch_header($filename){
+    public function fetch_header($key)
+    {
+    	if(! $key) return;
 
-    	$sql = "SELECT * FROM `txo_dumps` WHERE `filename` = '$filename'";
-    	
-    	if($id){
-    		$sql .= " WHERE `id` = '".db_escape($id)."'";
-    	}else if($filename){
-    		$sql .= " ";
-    	}else{
-    		return;
-    	}
-
-    	$sql .= " LIMIT 1";
+    	$sql = "SELECT * FROM `txo_dumps` WHERE `filename` = '$key' OR `id` = '$key' LIMIT 1";
 
 		$q = $this->db->query($sql);
 		$record = $q->result_array();
@@ -28,8 +22,11 @@ class txo_data extends CI_Model {
 		return $record[0];
     }
 
-    public function fetch_components($filename){
-    	$sql = "SELECT * FROM `component_values` WHERE `filename`='$filename'";
+    public function fetch_components($key)
+    {
+    	if(! $key) return;
+
+    	$sql = "SELECT * FROM `component_values` WHERE `filename`='$key' OR `txo_dump_id` = '$key'";
 
 		$q = $this->db->query($sql);
 		$records = $q->result_array();
@@ -37,9 +34,10 @@ class txo_data extends CI_Model {
 		return $records;
     }
 
-    public function fetch_total_components($id){
+    public function fetch_total_components($key)
+    {
 
-    	$sql = "SELECT * FROM `txo_total_components` WHERE `txo_dump_id` = '".db_escape($id)."'";
+    	$sql = "SELECT * FROM `txo_total_components` WHERE `filename`='$key' OR `txo_dump_id` = '$key'";
 		$q = $this->db->query($sql);
 		$records = $q->result_array();
 		

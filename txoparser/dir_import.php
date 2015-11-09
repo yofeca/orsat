@@ -1,7 +1,12 @@
 <?php
 
-	//home/larry/public_html/txoparser/database.php
-	include_once("D:\\xampp\\htdocs\\orsat\\txoparser\\database.php");
+	if(true){
+		$base_dir = "D:\\xampp\\htdocs\\orsat\\txoparser\\";
+	}else{
+		$base_dir = "/home/nmgdev/public_html/orsat/txoparser/";
+	}
+
+	include_once( $base_dir . "database.php" );
 
 	function pre($a){
 		echo "<pre>";
@@ -342,79 +347,94 @@
 
 	}//End Of parseTXO();
 
-	function get_files($path=""){
+	function get_files($path="")
+	{
 			
 		if( ! is_dir($path . "\\") ) return;
 
 		$sorted_list = array();
 		$dir_list = array_diff( scanDIR( $path ), array( '..' , '.' ) );
 			
-		if( $dir_list ) {
+		if( $dir_list ) 
+		{
 			natsort( $dir_list );
 			
-			foreach( $dir_list as $dl ){
+			foreach( $dir_list as $dl )
+			{
 				array_push( $sorted_list, $dl );
 			}
-		} else {
+		} 
+		else 
+		{
 			return false;
 		}
 
 		return $sorted_list;
-
 	}
 
-	//$path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
-	//parseTXO($path."\\"."2ABBJ18D.TX0");
-	///home/larry/public_html/txoparser/dumps
-	$folder = str_replace("__"," ",$argv[1]);
-
-	$path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps" . "\\" . $folder;
-	$files = get_files($path);
-
-	if($files){ //check if there are files not processed
-
-		$count = count($files);
-		for($i=0; $i<$count; $i++){
-
-			if(parseTXO($path."\\".$files[$i])){
-				//delete_db_file( $files[$i]['id'] );
-				echo " - Success.\n";
-			}else{
-				echo " - Failed!.\n";
-			}
-		}
-
-		if( delete_directory( $path, $folder ) ){
-			echo " - Success!\n";
-		}else{
-			//echo " - Failed!.\n";
-		}
-	}else{
-		delete_directory( $path, $folder );
-	}
-
-	function delete_directory($path, $folder){
-	
-		//$path = str_replace('.zip', '', $path);
-		//echo 'Deleting ' . str_replace( '.zip', '', basename($path) );
-		$newpath = $path ."\\".$folder;
+	function delete_directory( $path, $folder )
+	{
+		$newpath = $path ."\\". $folder;
 		echo 'Deleting ' . $newpath;
 		
-	    if (is_dir($path . "\\") === true AND $path != $newpath."\\"){
-
+	    if ( is_dir( $path . "\\" ) === true AND $path != $newpath . "\\" )
+	    {
 	        $files = array_diff(scandir($path), array('.', '..'));
 	 
 	        foreach ($files as $file)
 	        {
 	        	//echo (realpath($path) . '/' . $file . '--realpath');
-	            delete_directory(realpath($path) . '/' . $file);
+	            delete_directory(realpath( $path) . '\\' . $file );
 	        }
+
 	        //echo $path .'--maindir'; echo "\n";
 	        return rmdir($path);
-	    } else if (is_file($path) === true){
+	    } 
+	    else if (is_file($path) === true)
+	    {
 	    	//echo $path . '--file'; echo "\n";
 	        return unlink($path);
 	    }
+
 	    return false;
+	}
+
+
+	$folder = str_replace("__"," ",$argv[1]);
+	$path = $base_dir . "dumps" . "\\" . $folder;
+
+	$files = get_files($path);
+
+	if($files)
+	{ 
+		//check if there are files not processed
+		$count = count($files);
+
+		for($i=0; $i<$count; $i++)
+		{
+			if( parseTXO( $path . "\\" . $files[$i] ) )
+			{
+				//delete_db_file( $files[$i]['id'] );
+				echo " - Success.\n";
+			}
+			else
+			{
+				echo " - Failed!.\n";
+			}
+		}
+
+		if( delete_directory( $path, $folder ) ) 
+		{
+			echo " - Success!\n";
+		} 
+		else 
+		{
+			echo " - Failed!.\n";
+		}
+
+	}
+	else
+	{
+		delete_directory( $path, $folder );
 	}
 ?>

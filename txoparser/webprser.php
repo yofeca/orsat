@@ -227,7 +227,7 @@ function get_files($path="") {
 
 	}else{
 
-		$sql = "SELECT filename FROM `files` WHERE `flag`='0' LIMIT 1";
+		$sql = "SELECT filename FROM `files` WHERE `flag`='0' LIMIT 1000";
 		$r = dbQuery($sql);
 
 		return $r;

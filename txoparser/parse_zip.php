@@ -1,25 +1,40 @@
 <?php
-//home/larry/public_html/txoparser/database.php
-include_once("D:\\xampp\\htdocs\\orsat\\txoparser\\database.php");
 
-function fetch_zip_files(){
+if(true){
+	$base_dir = "D:\\xampp\\htdocs\\orsat\\txoparser\\";
+}else{
+	$base_dir = "/home/nmgdev/public_html/orsat/txoparser/";
+}
 
-	$sql = "SELECT * FROM `files` WHERE `flag`='0' AND `type`='zip' LIMIT 1000";
+include_once( $base_dir . "database.php" );
+
+function fetch_db_zip_files()
+{
+
+	$sql = "SELECT * FROM `files` WHERE `flag`='0' AND `type`='zip' AND `active`= '0' LIMIT 50";
 	$r = dbQuery($sql);
+
+	$count = count($r);
+
+	for( $i=0; $i<$count; $i++ )
+	{
+		
+		$id = $r[$i]['id'];
+		$sql = "UPDATE `files` SET `active`= '1' WHERE id = $id";
+		$q = dbQuery($sql);
+	}
 
 	return $r;
 		
 }//End Of get_files();
 
-
-
 function unzip_files($path=""){
 
 	echo 'Extracting ' . basename($path);
-
+	
 	if(! file_exists( $path ) ) return;
 	
-	$dir = dirname($path);
+	$dir = str_replace(".zip", "\\", $path );
 
 	$zip = new ZipArchive;
 	$res = $zip->open($path);
@@ -41,28 +56,34 @@ function delete_db_file($file_id){
 
 }
 
-//$path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
-//parseTXO($path."\\"."2ABBJ18D.TX0");
-///home/larry/public_html/txoparser/dumps
-$path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
+$path = $base_dir . "dumps";
 
 // $p = get_files($path);
-$files = fetch_zip_files();
+$files = fetch_db_zip_files();
+$count = count($files);
 
-if($files){ //check if there are files not processed
-	
-	$count = count($files);
-	for($i=0; $i<$count; $i++){
+if($files)
+{ 
+	//check if there are files not processed
+	for($i=0; $i<$count; $i++)
+	{
 		
-		if(unzip_files($path."\\".$files[$i]['filename'])){
-			//delete_db_file( $files[$i]['id'] );
-		}else{
+		if(unzip_files($path."\\".$files[$i]['filename']))
+		{
+			delete_db_file( $files[$i]['id'] );
+		}
+		else
+		{
 			echo " - Failed!.\n";
 		}
 	}
+}
 
-	for($i=0; $i<$count; $i++){
-		$cmd = "php -f D:\\xampp\\htdocs\\orsat\\txoparser\\dir_import.php " . str_replace( " ","__",str_replace(".zip", "", $files[$i]['filename'] ) );
+if($files)
+{ 
+	for($i=0; $i<$count; $i++)
+	{
+		$cmd = "php -f " . $base_dir . "dir_import.php " . str_replace( " ","__",str_replace(".zip", "", $files[$i]['filename'] ) );
 		//echo $cmd;
 		execInBackground($cmd);
 	}

@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"txo_dump",
+				"txo_dump_id"
+			],
+			[
+				"mysql_res",
+				"mysql_real_escape_string"
+			],
+			[
+				"base",
+				"base_dir"
+			],
+			[
+				"mysql_re",
+				"mysql_real_escape_string"
+			],
+			[
 				"star",
 				"start_date"
 			],
@@ -91,6 +107,14 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "application/models/txo_data.php",
+			"settings":
+			{
+				"buffer_size": 6628,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -141,45 +165,72 @@
 		"/D/xampp/htdocs/orsat/application",
 		"/D/xampp/htdocs/orsat/application/controllers",
 		"/D/xampp/htdocs/orsat/application/models",
-		"/D/xampp/htdocs/orsat/application/views",
-		"/D/xampp/htdocs/orsat/application/views/airs_list",
-		"/D/xampp/htdocs/orsat/application/views/layout",
-		"/D/xampp/htdocs/orsat/application/views/site_info",
-		"/D/xampp/htdocs/orsat/application/views/site_quick_look",
-		"/D/xampp/htdocs/orsat/application/views/sites",
-		"/D/xampp/htdocs/orsat/application/views/users",
-		"/D/xampp/htdocs/orsat/media",
 		"/D/xampp/htdocs/orsat/txoparser"
 	],
 	"file_history":
 	[
+		"/D/xampp/htdocs/orsat/application/models/txo_data.php",
+		"/D/xampp/htdocs/orsat/application/controllers/txo_dumps.php",
+		"/D/xampp/htdocs/orsat/application/controllers/admin.php",
+		"/D/Dropbox/repositories/ubertor/clients/adil awan - adilawan.ourubertor.com [10-17-2015]/hompage.html",
 		"/C/Users/nuj/Desktop/test.css",
+		"/D/Dropbox/repositories/ubertor/clients/adil awan - adilawan.ourubertor.com [10-17-2015]/style.css",
+		"/C/Users/nuj/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/nuj/AppData/Local/Temp/scp18959/public_html/orsat/txoparser/dir_import.php",
+		"/C/Users/nuj/AppData/Local/Temp/scp14343/public_html/orsat/txoparser/import_file.php",
+		"/C/Users/nuj/AppData/Local/Temp/scp14071/public_html/orsat/txoparser/unzip_file.php",
+		"/C/Users/nuj/AppData/Local/Temp/scp16671/public_html/orsat/txoparser/import_file.php",
+		"/C/Users/nuj/AppData/Local/Temp/scp33998/public_html/orsat/application/views/site_quick_look/main.php",
+		"/C/Users/nuj/AppData/Local/Temp/scp33999/public_html/orsat/application/views/site_quick_look/rts.php",
+		"/C/Users/nuj/AppData/Local/Temp/scp36294/public_html/orsat/txoparser/database.php",
+		"/C/Users/nuj/AppData/Local/Temp/scp50706/public_html/orsat/test/test.php",
+		"/C/Users/nuj/AppData/Local/Temp/scp53361/public_html/orsat/test/database.php",
+		"/D/xampp/htdocs/orsat/application/views/site_quick_look/main.php",
+		"/D/xampp/htdocs/orsat/txoparser/dir_import.php",
+		"/D/xampp/htdocs/orsat/txoparser/database.php",
+		"/D/xampp/htdocs/orsat/txoparser/parse_file.php",
+		"/D/xampp/htdocs/orsat/txoparser/parse_zip.php",
+		"/C/Users/nuj/AppData/Roaming/Sublime Text 3/Packages/Emmet/Default (Windows).sublime-keymap",
+		"/C/Users/nuj/AppData/Roaming/Sublime Text 3/Packages/Emmet/Emmet.sublime-settings",
+		"/D/xampp/htdocs/orsat/application/controllers/site_quick_look.php",
+		"/D/xampp/htdocs/orsat/txoparser/test.php",
 		"/D/xampp/htdocs/orsat/txoparser/webparser.php",
+		"/D/xampp/htdocs/orsat/txoparser/webprser.php",
+		"/D/xampp/htdocs/orsat/txoparser/dumps/test.php",
+		"/D/xampp/htdocs/orsat/application/views/txo_dumps/upload-txo.php",
+		"/D/xampp/htdocs/orsat/application/views/layout/menus.php",
+		"/D/xampp/htdocs/orsat/media/plupload/upload.php",
+		"/D/xampp/htdocs/orsat/application/controllers/site_info.php",
+		"/D/xampp/htdocs/orsat/media/custom.js",
+		"/D/xampp/htdocs/orsat/application/views/network/add.php",
+		"/D/xampp/htdocs/orsat/application/views/tceq/main.php",
+		"/D/xampp/htdocs/orsat/application/views/site_info/main.php",
+		"/D/xampp/htdocs/orsat/application/views/txo_dumps/add.php",
+		"/D/xampp/htdocs/orsat/application/controllers/network.php",
+		"/D/xampp/htdocs/orsat/application/models/component_data.php",
+		"/D/xampp/htdocs/orsat/application/views/site_quick_look/rts.php",
+		"/D/xampp/htdocs/orsat/application/views/airs_list/add.php",
+		"/D/xampp/htdocs/orsat/application/controllers/airs_list.php",
+		"/D/xampp/htdocs/orsat/application/config/config.php",
+		"/D/xampp/htdocs/orsat/application/config/database.php",
+		"/D/xampp/htdocs/orsat/application/controllers/tceq.php",
+		"/D/xampp/htdocs/orsat/application/views/airs_list/main.php",
+		"/D/xampp/htdocs/orsat/media/brio/jquery.dataTables-conf.js",
+		"/D/xampp/htdocs/orsat/media/brio/jquery.inputmask.bundle.js",
+		"/D/xampp/htdocs/orsat/application/views/sites/lcs.php",
+		"/D/xampp/htdocs/orsat/application/views/sites/cvs.php",
+		"/D/xampp/htdocs/orsat/application/views/sites/rts.php",
+		"/D/xampp/htdocs/orsat/application/views/sites/add.php",
 		"/D/xampp/htdocs/orsat/media/custom.css",
 		"/D/xampp/htdocs/orsat/application/views/layout/welcome.php",
-		"/D/xampp/htdocs/orsat/application/controllers/admin.php",
-		"/D/xampp/htdocs/orsat/application/views/layout/menus.php",
 		"/D/xampp/htdocs/orsat/application/views/layout/main.php",
 		"/D/xampp/htdocs/orsat/application/controllers/main.php",
-		"/D/xampp/htdocs/orsat/application/views/airs_list/add.php",
-		"/D/xampp/htdocs/orsat/application/controllers/network.php",
 		"/D/xampp/htdocs/orsat/application/controllers/sites.php",
-		"/D/xampp/htdocs/orsat/application/views/sites/cvs.php",
-		"/D/xampp/htdocs/orsat/application/views/sites/add.php",
-		"/D/xampp/htdocs/orsat/txoparser/webprser.php",
-		"/D/xampp/htdocs/orsat/application/views/site_info/main.php",
-		"/D/xampp/htdocs/orsat/application/controllers/site_info.php",
-		"/D/xampp/htdocs/orsat/application/models/txo_data.php",
 		"/D/xampp/htdocs/orsat/application/views/site_info/latest-txo.php",
 		"/D/xampp/htdocs/orsat/application/views/site_info/add.php",
 		"/D/xampp/htdocs/orsat/media/brio/custom.js",
-		"/D/xampp/htdocs/orsat/media/custom.js",
 		"/D/xampp/htdocs/orsat/media/brio/bootstrap-datetimepicker.css",
 		"/D/xampp/htdocs/orsat/media/brio/bootstrap-datetimepicker.js",
-		"/D/xampp/htdocs/orsat/application/controllers/site_quick_look.php",
-		"/D/xampp/htdocs/orsat/application/views/site_quick_look/rts.php",
-		"/D/xampp/htdocs/orsat/application/views/site_quick_look/main.php",
-		"/D/xampp/htdocs/orsat/application/models/component_data.php",
 		"/D/xampp/htdocs/orsat/application/views/site_quick_look/rts/main.php",
 		"/D/Dropbox/repositories/ubertor/reusable styles/english-to-chinese.js",
 		"/D/Dropbox/repositories/ubertor/clients/28 - audreyhsu/eng-chinese.js",
@@ -193,8 +244,6 @@
 		"/D/xampp/htdocs/orsat/application/controllers/user_permissions.php",
 		"/D/xampp/htdocs/orsat/application/views/users/main.php",
 		"/D/xampp/htdocs/orsat/application/views/layout/login.php",
-		"/D/xampp/htdocs/orsat/application/controllers/txo_dumps.php",
-		"/D/xampp/htdocs/orsat/application/controllers/tceq.php",
 		"/D/xampp/htdocs/orsat/application/controllers/qaqc.php",
 		"/D/xampp/htdocs/orsat/application/controllers/coa.php",
 		"/D/xampp/htdocs/orsat/application/views/coa/add.php",
@@ -212,24 +261,17 @@
 		"/C/Users/nuj/AppData/Roaming/Sublime Text 3/Packages/User/tabs_sublime-snippet.sublime-snippet",
 		"/D/xampp/htdocs/orsat/application/views/qaqc/add.php",
 		"/D/xampp/htdocs/orsat/application/controllers/quick_looks.php",
-		"/D/xampp/htdocs/orsat/application/views/airs_list/main.php",
-		"/D/xampp/htdocs/orsat/application/controllers/airs_list.php",
 		"/D/xampp/htdocs/practice/responsive-map.html",
 		"/D/xampp/htdocs/orsat_old/application/controllers/txo.php",
-		"/D/xampp/htdocs/orsat/application/views/network/add.php",
 		"/D/xampp/htdocs/orsat/application/views/network/main.php",
 		"/D/xampp/htdocs/orsat/application/views/site_info/target-components.php",
 		"/D/xampp/htdocs/orsat_old/application/views/quicklook/main.php",
-		"/D/xampp/htdocs/orsat/media/plupload/upload.php",
-		"/D/xampp/htdocs/orsat/application/views/txo_dumps/upload-txo.php",
 		"/D/xampp/htdocs/orsat/application/views/quick_looks/main.php",
 		"/C/Users/nuj/AppData/Roaming/Sublime Text 3/Packages/User/html5_sublime-snippet.sublime-snippet",
 		"/C/Users/nuj/AppData/Roaming/Sublime Text 3/Packages/User/bt_modal.sublime-snippet",
 		"/D/xampp/htdocs/orsat/application/views/qaqc/main.php",
 		"/D/xampp/htdocs/orsat_old/application/views/layout/main.php",
-		"/D/xampp/htdocs/orsat/application/views/tceq/main.php",
 		"/D/xampp/htdocs/orsat_old/application/controllers/tceq.php",
-		"/D/xampp/htdocs/orsat/application/views/txo_dumps/add.php",
 		"/D/xampp/htdocs/orsat_old/application/controllers/airs_list.php",
 		"/D/xampp/htdocs/orsat_old/application/views/txo/main.php",
 		"/D/xampp/htdocs/orsat_old/application/views/txo/upload-txo.php",
@@ -239,52 +281,26 @@
 		"/D/xampp/htdocs/orsat/txoparser/parse.php",
 		"/D/xampp/htdocs/orsat/txoparser/dparser.php",
 		"/D/xampp/htdocs/orsat_old/application/controllers/site_detail.php",
-		"/D/xampp/htdocs/orsat/txoparser/database.php",
 		"/D/xampp/htdocs/orsat/application/models/tceq_data.php",
 		"/D/xampp/htdocs/orsat_old/media/txoparser/parse.php",
 		"/D/xampp/htdocs/orsat/application/views/site_info/site-data.php",
 		"/D/xampp/htdocs/orsat_old/application/controllers/site.php",
-		"/D/xampp/htdocs/orsat/application/config/config.php",
 		"/D/xampp/htdocs/orsat_old/application/views/site_detail/main.php",
 		"/D/xampp/htdocs/orsat/application/views/site_info/cvs-info.ph",
 		"/D/xampp/htdocs/orsat/application/views/site_info/lcs-info.php",
 		"/C/Users/nuj/AppData/Roaming/Sublime Text 3/Packages/User/panel_skeleton.sublime-snippet",
 		"/D/xampp/htdocs/orsat_old/.htaccess",
 		"/D/xampp/htdocs/orsat_old/application/config/database.php",
-		"/D/xampp/htdocs/orsat/media/brio/jquery.dataTables-conf.js",
 		"/D/xampp/htdocs/orsat/application/controllers/admin/controller.txt",
 		"/D/xampp/htdocs/orsat/media/style.css",
 		"/D/xampp/htdocs/orsat/media/app.v1.css",
 		"/D/xampp/htdocs/orsat/application/controllers/admin/add.txt",
 		"/D/xampp/htdocs/orsat/application/controllers/admin/menu.txt",
-		"/D/xampp/htdocs/orsat/application/controllers/filter.php",
-		"/D/xampp/htdocs/orsat/application/controllers/site.php",
-		"/D/xampp/htdocs/practice/regex.php",
-		"/D/xampp/htdocs/orsat/media/txoparser/parse.php",
-		"/D/xampp/htdocs/dms/application/views/bc_verification/main.php",
-		"/D/xampp/htdocs/dms/application/views/bc_verification/attachments.php",
-		"/D/xampp/htdocs/orsat_parser/parser.php",
-		"/D/xampp/htdocs/data_table/ajax.php",
-		"/D/xampp/htdocs/orsat/application/views/txo/main.php",
-		"/D/xampp/htdocs/orsat/application/views/lcscvs/main.php",
-		"/D/xampp/htdocs/orsat/application/views/site/main.php",
-		"/D/xampp/htdocs/orsat/application/controllers/txo.php",
-		"/D/xampp/htdocs/orsat/application/views/txo/quick-look.php",
-		"/D/xampp/htdocs/dms/application/views/layout/main.php",
-		"/D/xampp/htdocs/orsat/application/views/txo/lcs.php",
-		"/D/xampp/htdocs/orsat/application/views/txo/cvs.php",
-		"/D/xampp/htdocs/orsat/application/controllers/lcscvs.php",
-		"/D/xampp/htdocs/orsat/application/views/site/add/cvs-concentration.php",
-		"/D/xampp/htdocs/orsat/application/views/site/add/lcs-compound.php",
-		"/D/xampp/htdocs/orsat/application/views/site/add/lcs-concentration.php",
-		"/D/xampp/htdocs/orsat/application/controllers/txo_detail.php",
-		"/D/xampp/htdocs/orsat/application/views/site/add/site-info.php",
-		"/D/xampp/htdocs/orsat/application/views/site/add.php",
-		"/D/xampp/htdocs/orsat/system/core/Input.php"
+		"/D/xampp/htdocs/orsat/application/controllers/filter.php"
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 38.0
 	},
 	"find_in_files":
 	{
@@ -304,6 +320,25 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"\n#",
+			"<div class=\"bg-hover\"></div></div>",
+			"<div class=\"bg-hover\"></div>",
+			"nex",
+			"previous",
+			"previus",
+			"str_re",
+			"replace",
+			"		\n",
+			"pathinfo",
+			"++){\n",
+			"get_zip_files",
+			"select",
+			"echo",
+			"$Duration: 600",
+			"$Delay: 600",
+			"$Delay: 100",
+			"$Delay: 50",
+			"$Delay: 50\n",
 			"});\n",
 			"fetch_monthly_txo",
 			"print",
@@ -412,26 +447,7 @@
 			"etch_target_compounds",
 			"date(",
 			"date",
-			"_clean_input",
-			"Disallowed Key Characters",
-			"add",
-			"col-sm-3",
-			"fetch_qaqc(",
-			"print",
-			"print_r",
-			"formData.",
-			"lcsa-id",
-			"tl_count",
-			"compound_list",
-			"ajxlcs_concentration",
-			"std_concentration",
-			"cvs",
-			"save-cvs",
-			"fetch_cvs(",
-			"lcs",
-			"style",
-			"100",
-			"71x2pc"
+			"_clean_input"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -439,6 +455,13 @@
 		"regex": false,
 		"replace_history":
 		[
+			"</div><div class=\"bg-hover\"></div>",
+			"",
+			"fetch_zip_files",
+			"$Duration: 900",
+			"$Delay: 400",
+			"$Delay: 600",
+			"$Delay: 100",
 			"thb",
 			"['channel']=='B'",
 			"headerb",
@@ -515,7 +538,7 @@
 			"cvsb",
 			"cvsa"
 		],
-		"reverse": true,
+		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
 		"whole_word": false,
@@ -524,14 +547,103 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "application/models/txo_data.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6628,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1005,
+								230
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content"
+							],
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 38.0
+		"height": 23.0
 	},
 	"input":
 	{
@@ -618,7 +730,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 297.0,
+	"side_bar_width": 300.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

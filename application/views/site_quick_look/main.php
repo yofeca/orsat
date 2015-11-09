@@ -198,7 +198,7 @@ $(document).ready(function(){
 		Back to Site Info.</a>
 
 		<div id="site-prev-next" style="float: right; margin-top: -3px;">
-			<button id="bt-previous">Previus</button>
+			<button id="bt-previous">Previous</button>
 			<button id="bt-next">Next</button>
 		</div>
 </div>

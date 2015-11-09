@@ -1,6 +1,12 @@
 <?php
-//home/larry/public_html/txoparser/database.php
-include_once("D:\\xampp\\htdocs\\orsat\\txoparser\\database.php");
+
+if(true){
+	$base_dir = "D:\\xampp\\htdocs\\orsat\\txoparser\\";
+}else{
+	$base_dir = "/home/nmgdev/public_html/orsat/txoparser/";
+}
+
+include_once( $base_dir . "database.php");
 
 function pre($a){
 	echo "<pre>";
@@ -20,6 +26,7 @@ function fetch_site($instrument_name){
 	$instrument_name = str_replace(" ", "", $instrument_name);
 	
 	$sql = "SELECT id FROM `sites` WHERE UPPER(REPLACE(REPLACE(`instrument_name`,' ',''),'-','')) LIKE '%" . strtoupper(str_replace(array(' ','-'), '', $instrument_name)) . "%' LIMIT 1";
+	echo $sql;
 	$r = dbQuery($sql);
 	
 	if($r){
@@ -71,7 +78,7 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 		$site_name = $channel = $sample_name = $data_acquisition_time='';
 		$filename = basename($filepath);
 
-		echo "inserting $txo_id - $filename";
+		echo "inserting $filename";
 
 		$header_counter = 1;
 		for($i=1; $i<$totalcsv; $i++){//start of header loop array
@@ -366,7 +373,7 @@ function get_files($path="") {
 
 	}else{
 
-		$sql = "SELECT filename FROM `files` WHERE `flag`='0' LIMIT 1000";
+		$sql = "SELECT filename FROM `files` WHERE `flag`='0' AND `type`='tx0' LIMIT 500";
 		$r = dbQuery($sql);
 
 		return $r;
@@ -377,10 +384,12 @@ function get_files($path="") {
 //$path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
 //parseTXO($path."\\"."2ABBJ18D.TX0");
 ///home/larry/public_html/txoparser/dumps
-$path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
-
+$path = $base_dir . "dumps";
+echo $path;
 // $p = get_files($path);
 $p = get_files();
+
+print_r($p);
 
 if($p){ //check if there are files not processed
 	$count = count($p) - 1;
