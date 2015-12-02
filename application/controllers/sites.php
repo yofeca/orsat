@@ -19,7 +19,7 @@ class sites extends CI_Controller {
 		$start += 0;
 		$limit = 100;
 				
-		$sql = "SELECT s.* FROM `".$table."` s LEFT JOIN `network` n ON s.network_id=n.id ORDER BY s.`instrument_name` ASC LIMIT $start, $limit";
+		$sql = "SELECT s.* FROM `".$table."` s LEFT JOIN `network` n ON UPPER(s.network_name)=UPPER(n.name) ORDER BY s.`instrument_name` ASC LIMIT $start, $limit";
 		$export_sql = md5($sql);
 		$_SESSION['export_sqls'][$export_sql] = $sql;
 		$q = $this->db->query($sql);
@@ -139,6 +139,7 @@ class sites extends CI_Controller {
 		$error = false;		
 		
 		if(!$error){
+
 			// check if there are other lands that are connected to the same land detail
 			$id = $_POST['id'];			
 			
@@ -146,7 +147,7 @@ class sites extends CI_Controller {
 
 			//fields							
 			$sql .= "   `instrument_name` = '".mysql_real_escape_string($_POST['instrument_name'])."'";
-			$sql .= " , `network_id` = '".mysql_real_escape_string($_POST['network'])."'";
+			$sql .= " , `network_name` = '".mysql_real_escape_string($_POST['network'])."'";
 			$sql .= " , `site_designator` = '".mysql_real_escape_string($_POST['site_designator'])."'";
 			$sql .= " , `aqs_no` = '".mysql_real_escape_string($_POST['aqs_no'])."'";
 			$sql .= " , `short_name` = '".mysql_real_escape_string($_POST['short_name'])."'";
@@ -259,19 +260,18 @@ class sites extends CI_Controller {
 		parse_str($_POST['data'], $data);
 		extract($data);
 
-		//$dateon = date('Y-m-d H:i:s', strtotime($date_on));
-		//$dateoff = ($date_off=='') ? 'NULL' : date('Y-m-d H:i:s', strtotime($date_off));
-
 		$sql = "INSERT INTO `standards` SET";
 		$sql .= " `coa_id` = '".mysql_real_escape_string($cylinder_id)."'";
 		$sql .= " , `date_on` = '".date('Y-m-d H:i:s', strtotime($date_on))."'";
-		$sql .= " , `date_off` = '".($date_off=='') ? NULL : date('Y-m-d H:i:s', strtotime($date_off))."'";
+		if( ! empty($date_off) ){
+			$sql .= " , `date_off` = '". date('Y-m-d H:i:s', strtotime($date_off)) ."'";
+		}
 		$sql .= " , `value` = '".mysql_real_escape_string($dilution_factor)."'";
 		$sql .= " , `site_id` = '".mysql_real_escape_string($lcs_site_id)."'";
 		$sql .= " , `type` = '".mysql_real_escape_string($standard_type)."'";
 		$q = $this->db->query($sql);
 
-		//$response['id'] = $this->db->insert_id();
+		$response['id'] = $this->db->insert_id();
 
 		echo json_encode( array( 'id' => $this->db->insert_id() ) );
 
@@ -292,13 +292,16 @@ class sites extends CI_Controller {
 		$sql = "UPDATE `standards` SET ";
 		$sql .= " `coa_id` = '".mysql_real_escape_string($cylinder_id)."'";
 		$sql .= " , `date_on` = '".date('Y-m-d H:i:s', strtotime($date_on))."'";
-		$sql .= " , `date_off` = '".($date_off=='') ? NULL : date('Y-m-d H:i:s', strtotime($date_off))."'";
+		if( ! empty($date_off) ){
+			$sql .= " , `date_off` = '". date('Y-m-d H:i:s', strtotime($date_off)) ."'";
+		}
 		$sql .= " , `value` = '".mysql_real_escape_string($dilution_factor)."'";
 		$sql .= " , `site_id` = '".mysql_real_escape_string($lcs_site_id)."'";
 		$sql .= " , `type` = '".mysql_real_escape_string($standard_type)."'";
 		$sql .= " WHERE `id` = $id limit 1";	
 		$this->db->query($sql);										
 	}
+
 	public function ajax_delete_lcs_standard($id=""){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 

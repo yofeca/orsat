@@ -25,18 +25,19 @@ class site_quick_look extends CI_Controller {
 		$txo = $this->txo_data->fetch_daily_txo($date,$site_id);
 
 		$site = $this->site_data->fetch_info($site_id);
-		$network_id = $site['network_id'];
-
+		$network_name = $site['network_name'];
+	
 		$tc = count($txo);
 		for($i=0; $i<$tc; $i++){
 			$txo[$i]['components'] = $this->txo_data->fetch_components($txo[$i]['filename'],'');
 		}
 		
+		//$sql = "SELECT * FROM `network` WHERE "
 		$data = array();
-
+		$data['qaqc_info'] = $this->site_data->fetch_qaqc($site_id);
 		$data['site_info'] = $site;
-		$headera = $this->component_data->fetch_network_target_components('A',$network_id);
-		$headerb = $this->component_data->fetch_network_target_components('B',$network_id);
+		$headera = $this->component_data->fetch_network_target_components('A',$network_name);
+		$headerb = $this->component_data->fetch_network_target_components('B',$network_name);
 
 		$data['headera'] = $headera;
 		$data['headerb'] = $headerb;
@@ -44,16 +45,16 @@ class site_quick_look extends CI_Controller {
 		$data['controller'] = $controller;
 
 		if($view=='time'){
-			$data['modea'] = $this->component_data->fetch_mode($date,$site_id,'A',$headera);
-			$data['modeb'] = $this->component_data->fetch_mode($date,$site_id,'B',$headerb);
+			//$data['modea'] = $this->component_data->fetch_mode($date,$site_id,'A',$headera);
+			//$data['modeb'] = $this->component_data->fetch_mode($date,$site_id,'B',$headerb);
 			$data['standards'] = $this->component_data->fetch_standard_components('RTS','');
 			$data['rts_summary'] = $this->component_data->fetch_rts_summary($date,$site_id);
 			$data['rts'] = $this->txo_data->fetch_daily_standards($date,$site_id,'Q','');
 			$data['content'] = $this->load->view($controller.'/rts', $data, true);
 		}else{
 			$data['standards'] = $this->component_data->fetch_standard_components('LCS_CVS','');
-			$data['lcs'] = $this->txo_data->fetch_daily_standards($date,$site_id,'E','');
-			$data['cvs'] = $this->txo_data->fetch_daily_standards($date,$site_id,'C','');
+			$data['lcs_content'] = $this->load->view($controller.'/lcs', array('lcs'=>$this->txo_data->fetch_daily_standards($date,$site_id,'E','')), true); 
+			$data['cvs_content'] = $this->load->view($controller.'/cvs', array('cvs'=>$this->txo_data->fetch_daily_standards($date,$site_id,'C','')), true);
 			$data['content'] = $this->load->view($controller.'/main', $data, true);
 		}
 		

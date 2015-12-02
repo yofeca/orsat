@@ -81,9 +81,11 @@ if($files)
 
 if($files)
 { 
+	print_r($files);
 	for($i=0; $i<$count; $i++)
 	{
 		$cmd = "php -f " . $base_dir . "dir_import.php " . str_replace( " ","__",str_replace(".zip", "", $files[$i]['filename'] ) );
+	
 		//echo $cmd;
 		execInBackground($cmd);
 	}
@@ -95,7 +97,7 @@ function execInBackground($cmd) {
        pclose( popen("start " . $cmd, "r") );  
     } 
     else { 
-        exec($cmd . " > /dev/null &");   
+        exec($cmd . " > /dev/null &");
     } 
 }
 

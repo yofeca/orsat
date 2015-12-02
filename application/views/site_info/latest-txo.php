@@ -28,7 +28,7 @@
 											$filename = $txo[$i]['list'][$j]['filename'];
 											if(substr($filename,-10,1)=='P'){
 											?>
-												<a href="<?php echo site_url(); ?>txo_dumps/edit/<?php echo $txo[$i]['list'][$j]['id']; ?>"><?php echo substr($filename,-5,1); ?></a>
+												<a href="<?php echo site_url(); ?>txo_dumps/edit/<?php echo $txo[$i]['list'][$j]['filename']; ?>"><?php echo substr($filename,-5,1); ?></a>
 											<?php
 											}
 										}
@@ -38,7 +38,7 @@
 											$filename = $txo[$i]['list'][$j]['filename'];
 											if(substr($filename,-10,1)=='B'){
 											?>
-												<a href="<?php echo site_url(); ?>txo_dumps/edit/<?php echo $txo[$i]['list'][$j]['id']; ?>"><?php echo substr($filename,-5,1); ?></a>
+												<a href="<?php echo site_url(); ?>txo_dumps/edit/<?php echo $txo[$i]['list'][$j]['filename']; ?>"><?php echo substr($filename,-5,1); ?></a>
 											<?php
 											}
 										}
@@ -47,7 +47,8 @@
 								<td>
 									<a class="btn btn-default" href="<?php echo site_url(); ?>site_quick_look?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=amount">Amount</a>
 									<a class="btn btn-default" href="<?php echo site_url(); ?>site_quick_look?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=area">Area</a>
-									<a class="btn btn-default" href="<?php echo site_url(); ?>site_quick_look?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=time">Time</a>
+									<a class="btn btn-default" href="<?php echo site_url(); ?>site_quick_look?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=time">Retention Time</a>
+									<a class="btn btn-default" href="<?php echo site_url(); ?>site_quick_look?dd=<?php echo urlencode($txo[$i]['dd']); ?>&sid=<?php echo urlencode($txo[$i]['site_id']);?>&v=responsefactor">Response Factor</a>
 								</td>
 							</tr>
 							<?php

@@ -14,7 +14,7 @@ class txo_data extends CI_Model
     {
     	if(! $key) return;
 
-    	$sql = "SELECT * FROM `txo_dumps` WHERE `filename` = '$key' OR `id` = '$key' LIMIT 1";
+    	$sql = "SELECT * FROM `txo_dumps` WHERE `filename` = '$key' LIMIT 1";
 
 		$q = $this->db->query($sql);
 		$record = $q->result_array();
@@ -26,7 +26,7 @@ class txo_data extends CI_Model
     {
     	if(! $key) return;
 
-    	$sql = "SELECT * FROM `component_values` WHERE `filename`='$key' OR `txo_dump_id` = '$key'";
+    	$sql = "SELECT * FROM `component_values` WHERE `filename`='$key'";
 
 		$q = $this->db->query($sql);
 		$records = $q->result_array();
@@ -37,7 +37,7 @@ class txo_data extends CI_Model
     public function fetch_total_components($key)
     {
 
-    	$sql = "SELECT * FROM `txo_total_components` WHERE `filename`='$key' OR `txo_dump_id` = '$key'";
+    	$sql = "SELECT * FROM `txo_total_components` WHERE `filename`='$key'";
 		$q = $this->db->query($sql);
 		$records = $q->result_array();
 		
@@ -75,7 +75,7 @@ class txo_data extends CI_Model
 
 		if(!$date) return;
 
-		$sql = "SELECT td.id, td.filename, td.data_acquisition_time, td.channel, ttc.pp_carbon, ttc.area, ttc.method_rt
+		$sql = "SELECT td.id, td.filename, td.data_acquisition_time, td.channel, td.sequence_file, td.noise_threshold, td.area_threshold, ttc.pp_carbon, ttc.area, ttc.method_rt
 		FROM `txo_dumps` td
 		LEFT JOIN `txo_total_components` ttc ON td.id=ttc.txo_dump_id
 		WHERE DATE_FORMAT(td.data_acquisition_time, '%Y-%m-%d') = DATE_FORMAT('$date','%Y-%m-%d') AND td.site_id = '$site_id'
@@ -153,9 +153,10 @@ class txo_data extends CI_Model
 			
 			$tls = count($list_standards);
 			$components = array();
+			
+			$ctr1 = $ctr2 = 0;
 
 			for($i=0; $i<$tls; $i++){
-				$list_ctr = 0;
 				if($list_standards[$i]['channel']=='A'){
 					$sql = "SELECT al.component_name, al.alias, al.carbon_no, t.sort, t.channel, cc.value, cv.amount, cv.time, cv.area FROM `airs_list` al
 							LEFT JOIN `tceq` t ON al.id=t.airs_list_id
@@ -163,8 +164,8 @@ class txo_data extends CI_Model
 							RIGHT JOIN `component_values` cv ON REPLACE(REPLACE(al.component_name,'-',''),',','') = REPLACE(REPLACE(cv.component_name,'-',''),',','')
 							WHERE cv.filename='".$list_standards[$i]['filename']."' AND cc.coa_id='".$coa['coa_id']."' AND t.channel='A' ORDER BY t.sort ASC";
 					$q = $this->db->query($sql);
-					$components['A'][$list_ctr] = $q->result_array();
-					$list_ctr++;
+					$components['A'][$ctr1] = $q->result_array();
+					$ctr1++;
 				}else if($list_standards[$i]['channel']=='B'){
 					$sql = "SELECT al.component_name, al.alias, al.carbon_no, t.sort, t.channel, cc.value, cv.amount, cv.time, cv.area FROM `airs_list` al
 							LEFT JOIN `tceq` t ON al.id=t.airs_list_id
@@ -172,8 +173,8 @@ class txo_data extends CI_Model
 							RIGHT JOIN `component_values` cv ON REPLACE(REPLACE(al.component_name,'-',''),',','') = REPLACE(REPLACE(cv.component_name,'-',''),',','')
 							WHERE cv.filename='".$list_standards[$i]['filename']."' AND cc.coa_id='".$coa['coa_id']."' AND t.channel='B' ORDER BY t.sort ASC";
 					$q = $this->db->query($sql);
-					$components['B'][$list_ctr] = $q->result_array();
-					$list_ctr++;
+					$components['B'][$ctr2] = $q->result_array();
+					$ctr2++;
 				}
 			}
 			$components['coa'] = $coa;

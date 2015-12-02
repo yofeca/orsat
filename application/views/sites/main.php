@@ -27,13 +27,14 @@
 		self.location = "<?php echo site_url(); echo $controller; ?>/add";
 	}
 </script>
+
 <style>
 	.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th{ padding: 4px; font-size: 12px;}
 </style>
 <div class="row">
 	<div class="container-fluid">
 		<div class="panel panel-default">
-			<div class="panel-heading">Site List</div>
+			<div class="panel-heading">Site List <button id="bt-delete-selection">Delete</button></div>
 			<div class="panel-body">
 				<form action="<?php echo site_url(); ?><?php echo $controller; ?>/search/" class='form-inline' >
 					<div class="form-group">
@@ -87,6 +88,7 @@
 	<div class="container-fluid">
 		<div class="panel panel-default" id="panel-table">
 			<div class="panel-heading">Records</div>
+
 			<div class="panel-body">
 				<div class="col-sm-12 table-responsive">
 					<table class="table table-striped table-bordered" id="dt-wrapper">

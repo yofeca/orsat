@@ -37,7 +37,7 @@ function deleteRecord(co_id){
 			dataType: "script",
 			success: function(){
 				$("#tr"+co_id).fadeOut(200);
-				self.location = "<?php echo site_url(); echo $controller ?>";
+				self.location = "<?php echo site_url();?>site_info?sid=<?php echo $record['site_id'];?>";
 			}
 		});
 		
@@ -82,28 +82,8 @@ function deleteRecord(co_id){
 					<div class="form-group">
 						<label for="site_name" class="col-sm-4 control-label">Site</label>
 						<div class="col-sm-8">
-						
-						<?php
-							if($sites){
-								?>
-							<input type="hidden" name="site_id" value="<?php echo $_GET['sid']; ?>">
-							<select class="form-control chosen-select" placeholder="Choose Site" name="site_id" disabled>
-								<option></option>
-								<?php
-									$t = count($sites);
-									$site_id = $_GET['sid'];
-									for($i=0;$i<$t; $i++){
-										?>
-										<option value="<?php echo $sites[$i]['id']; ?>" <?php echo ($sites[$i]['id']==$site_id) ? 'selected':''; ?>><?php echo $sites[$i]['instrument_name']; ?></option>
-										<?php
-									}
-								?>
-							</select>
-							<?php 
-								}else{
-							 ?>
-							<input type="text" name="site_name" size="40" class="form-control" placeholder="Enter Site Name" readonly>
-							<?php } ?>
+							<input type="hidden" name="site_id" value="<?php echo $sites['id'] ?>">
+							<input type="text" name="site_name" size="40" class="form-control" placeholder="Enter Site Name" value="<?php echo $sites['instrument_name']; ?>" readonly>
 						</div>
 					</div>
 

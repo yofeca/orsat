@@ -16,7 +16,7 @@ jQuery(function(){
 	});
 	*/
 
-//Brio
+	//Brio
 
 	/********************************
 	popover
@@ -166,6 +166,145 @@ jQuery(function(){
 	});
 
 });
+
+/********************************
+Mask cell values
+mask_values(selector,new_class,cell_value);
+********************************/
+function mask_values(s,nc,cv){
+	$(s).each(function(){
+		$(this).addClass(nc);
+		var t = parseFloat($(this).html());
+		if(t == 0){
+			$(this).html(cv);
+		}
+	});
+}
+
+/******************************
+ Generate chart for selected txo data
+ 
+ generate_txodata_chart(object, thlabelname, chart, charttype);
+
+*******************************/
+function generate_txodata_chart(obj, l, c, ct){
+
+	var id = obj.attr('id').replace('bt-','');
+	var ch = obj.data('channel');
+	var arr_categories = new Array();
+	var arr_values = new Array();
+
+	$(l+'-'+ch).each(function(){
+		arr_categories.push ($(this).attr('id'));
+	});
+
+	$('#'+id+' .value').each(function(){
+		arr_values.push($(this).data('value'));
+	});
+
+	$(c+'-'+ch).highcharts({
+        title: {
+            text: id,
+            x: -20 //center
+        },
+        xAxis: {
+            categories: arr_categories
+        },
+        yAxis: {
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [
+        	{
+	        	name: id,
+	        	showInLegend: false,
+	       		data: arr_values
+   			}
+   		],
+   		chart: {
+            type: ct,
+            zoomType: 'xy'
+    	}
+    });
+	
+	//console.log('id:'+id+',ch:'+ch+',thlabel:'+l+',chart:'+c+',labels:'+arr_labels+',values:'+arr_values);
+}
+
+/************************************
+ Generate chart all the charts for each channels
+ generate_txodata_chart_summary(tableselector, thlabelname, chartname, channel, charttype){
+*************************************/
+function generate_txodata_chart_summary(t, l, c, ch, ct){
+	
+	var arr_row = new Array();
+	var arr_categories = new Array();
+
+	$(l+'-'+ch).each(function(){
+		arr_categories.push ($(this).attr('id'));
+	});
+
+	$(t+' tr').each(function(){
+		var name = $(this).attr('id');
+		var data = new Array();
+
+		var element = {};
+
+		$('.value',this).each(function(){
+			var val = parseFloat($(this).data('value'));
+			if(isNaN(val)) val = 0
+
+			data.push(val);
+		});
+
+		element.name = name,
+		element.data = data;
+		arr_row.push(element);
+
+	});
+	arr_row.splice(0,1);
+
+	$(c+'-'+ch).highcharts({
+        title: {
+            text: 'Quick Looks',
+            x: -20 //center
+        },
+        xAxis: {
+            categories: arr_categories
+        },
+        yAxis: {
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: 
+        	arr_row
+        ,
+   		chart: {
+            type: ct,
+            zoomType: 'xy'
+    	}
+    });
+    //console.log(arr_categories);
+	console.log(arr_row);
+}
+
 function alertX(data){
 	//jAlert(data);
 	jQuery("#dialoghtml").html(data);

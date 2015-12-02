@@ -1,18 +1,7 @@
 <?php
 
-if(true){
-	$base_dir = "D:\\xampp\\htdocs\\orsat\\txoparser\\";
-}else{
-	$base_dir = "/home/nmgdev/public_html/orsat/txoparser/";
-}
-
-include_once( $base_dir . "database.php");
-
-function pre($a){
-	echo "<pre>";
-	print_r($a);
-	echo "</pre>";
-}
+//include_once("/home/nmgdev/public_html/orsat/txoparser/database.php");
+include_once(__DIR__ .'\\database.php');
 
 function fetch_txo($filepath){
 	$filename = basename($filepath);
@@ -21,21 +10,24 @@ function fetch_txo($filepath){
 	return $r;
 }
 
-function fetch_site($instrument_name){	
-
-	$instrument_name = str_replace(" ", "", $instrument_name);
-	
-	$sql = "SELECT id FROM `sites` WHERE UPPER(REPLACE(REPLACE(`instrument_name`,' ',''),'-','')) LIKE '%" . strtoupper(str_replace(array(' ','-'), '', $instrument_name)) . "%' LIMIT 1";
-	echo $sql;
+function fetch_site($instrument_name)
+{	
+	$sql = "SELECT id FROM `sites` WHERE `instrument_name` LIKE '%" . $instrument_name . "%' LIMIT 1";
 	$r = dbQuery($sql);
 	
 	if($r){
 		return $r[0]['id'];
 	}else{
-		$sql = "INSERT INTO `sites` SET `instrument_name`= '".mysql_real_escape_string(strtoupper($instrument_name))."'";
+		$sql = "SELECT id FROM `sites` WHERE `instrument_name` LIKE '%" . str_replace('-','',$instrument_name) . "%' LIMIT 1";
 		$r = dbQuery($sql);
-
-		return $r['mysql_insert_id'];
+		if($r){
+			return $r[0]['id'];
+		}else{
+			$sql = "INSERT INTO `sites` SET `instrument_name`= '".mysql_real_escape_string(strtoupper($instrument_name))."'";
+			$r = dbQuery($sql);
+	
+			return $r['mysql_insert_id'];
+		}
 	}
 }
 
@@ -65,8 +57,13 @@ function convert_to_date($str){
 }
 
 function parseTXO($filepath){ //filepath should be absolute path of the file
+    
+	if(! file_exists($filepath) )
+	{
 
-	if(! file_exists($filepath) ) return; //double check if the file really exists in directory
+		echo $filepath . " - Does not exist. ";
+		return; //double check if the file really exists in directory
+	}
 
 	$csv = array_map('str_getcsv', file($filepath)); //convert csv file to array
 	$totalcsv = count($csv);
@@ -78,7 +75,7 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 		$site_name = $channel = $sample_name = $data_acquisition_time='';
 		$filename = basename($filepath);
 
-		echo "inserting $filename";
+		echo 'Inserting - ' . $filepath;
 
 		$header_counter = 1;
 		for($i=1; $i<$totalcsv; $i++){//start of header loop array
@@ -105,16 +102,26 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 						}
 						$key = trim($key);
 						$key = str_replace('#', '', $key);
-						$key = str_replace(array(' ', '/'), '_', $key);
+						$key = str_replace(array(' ', '/'), '_', trim($key));
 
 						if(strtolower($key)=='date') $value = convert_to_date($value);
-						if(strtolower($key)=='data_acquisition_time'){
+						
+						if(strtolower($key)=='data_acquisition_time')
+						{
 							$value = convert_to_date($value);
 							$data_acquisition_time = $value;
 						}
+
+						if(strtolower($key)=='instrument_name')
+						{
+							$site_name = trim($value);
+							$site_name = preg_replace('/\s+/', '-', $site_name);
+							$value = mysql_real_escape_string($site_name);
+						}
+
 						$sqlext[] = "`". strtolower($key) ."` = '".mysql_real_escape_string(trim($value))."'";
 
-						if(strtolower($key)=='instrument_name') $site_name = mysql_real_escape_string(trim($value));
+
 						if(strtolower($key)=='channel') $channel = mysql_real_escape_string(trim($value));
 						if(strtolower($key)=='sample_name') $sample_name = mysql_real_escape_string(trim($value));
 					}
@@ -206,9 +213,9 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 		unlink($filepath);
 		return true;
 
-	}//end of txo not inserted
-
-	else{//if txo exists
+	}
+	else //if txo exists
+	{
 		
 		$site_name = $channel = $sample_name = $data_acquisition_time='';
 		$filename = $r[0]['filename'];
@@ -248,9 +255,16 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 							$value = convert_to_date($value);
 							$data_acquisition_time = $value;
 						}
+
+						if(strtolower($key)=='instrument_name')
+						{
+							$site_name = trim($value);
+							$site_name = preg_replace('/\s+/', '-', $site_name);
+							$value = mysql_real_escape_string($site_name);
+						}
+
 						$sqlext[] = "`". strtolower($key) ."` = '".mysql_real_escape_string(trim($value))."'";
 
-						if(strtolower($key)=='instrument_name') $site_name = mysql_real_escape_string(trim($value));
 						if(strtolower($key)=='channel') $channel = mysql_real_escape_string(trim($value));
 						if(strtolower($key)=='sample_name') $sample_name = mysql_real_escape_string(trim($value));
 					}
@@ -373,7 +387,7 @@ function get_files($path="") {
 
 	}else{
 
-		$sql = "SELECT filename FROM `files` WHERE `flag`='0' AND `type`='tx0' LIMIT 500";
+		$sql = "SELECT filename FROM `files` WHERE `flag`='0' AND `type`='tx0' LIMIT 961";
 		$r = dbQuery($sql);
 
 		return $r;
@@ -381,25 +395,31 @@ function get_files($path="") {
 	}
 }//End Of get_files();
 
-//$path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
-//parseTXO($path."\\"."2ABBJ18D.TX0");
-///home/larry/public_html/txoparser/dumps
-$path = $base_dir . "dumps";
-echo $path;
+
+$path = __DIR__."\\dumps";
+//$path = "/home/nmgdev/public_html/orsat/txoparser/dumps";
+
 // $p = get_files($path);
 $p = get_files();
 
-print_r($p);
-
-if($p){ //check if there are files not processed
+if($p)
+{ 
+	//check if there are files not processed
 	$count = count($p) - 1;
-	for($i=$count; $i>=0; $i--){
-
-		if(parseTXO($path."\\".$p[$i]['filename'])){
+	
+	for($i=$count; $i>=0; $i--)
+	{
+		if(parseTXO($path."\\".$p[$i]['filename']))
+		{
 			echo " - Success!\n";
-		}else{
+		}
+		else
+		{
 			echo " - Failed!.\n";
 		}
 	}
 }
+
+    /* Closing connection */
+    mysql_close($link); 
 ?>

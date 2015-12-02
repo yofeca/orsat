@@ -4,6 +4,8 @@ class qaqc extends CI_Controller {
 	var $table;
 	var $controller;
 
+	var $site_id;
+
 	public function __construct(){
 		parent::__construct();
 		$this->load->database();
@@ -91,7 +93,7 @@ class qaqc extends CI_Controller {
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 		$table = $this->table;
 		$controller = $this->controller;
-		
+
 		if(!trim($id)){
 			redirect(site_url($controller));
 		}
@@ -116,8 +118,12 @@ class qaqc extends CI_Controller {
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 		$controller = $this->controller;
 
+		$id = $_GET['sid'];
+
+		if(!id) return;
+
 		$data = array();
-		$data['sites'] = $this->site_data->fetch_sites();
+		$data['sites'] = $this->site_data->fetch_sites($id);
 		$data['controller'] = $controller;
 		$data['content'] = $this->load->view($controller.'/add', $data, true);
 		$this->load->view('layout/main', $data);;
@@ -128,7 +134,7 @@ class qaqc extends CI_Controller {
 		$table = $this->table;
 		$controller = $this->controller;
 		$error = false;		
-		
+	
 		if(!$error){
 			// check if there are other lands that are connected to the same land detail
 			$id = $_POST['id'];			
@@ -150,7 +156,7 @@ class qaqc extends CI_Controller {
 			$this->db->query($sql);										
 			?>
 			alertX("Successfully Updated Record.");
-			//self.location = "<?php echo site_url("site_info?sid=".$_POST['id']); ?>";
+			self.location = "<?php echo site_url("site_info?sid=".$_POST['site_id']); ?>";
 			<?php
 		}
 		?>jQuery("#record_form *").attr("disabled", false);<?php
@@ -175,13 +181,14 @@ class qaqc extends CI_Controller {
 			$sql .= " , `data_validated_thru` = '".mysql_real_escape_string($_POST['data_validated_thru'])."'";
 			$sql .= " , `channel_a_rf` = '".mysql_real_escape_string($_POST['channel_a_rf'])."'";
 			$sql .= " , `channel_b_rf` = '".mysql_real_escape_string($_POST['channel_b_rf'])."'";
-
+			$sql .= " , `last_calibration_date` = '".mysql_real_escape_string($_POST['last_calibration_date'])."'";
+			$sql .= " , `last_calibration_by` = '".mysql_real_escape_string($_POST['last_calibration_by'])."'";
 			
 			$this->db->query($sql);										
 			
 			?>
 			alertX("Successfully Inserted Record.");
-			self.location = "<?php echo site_url($controller); ?>";
+			self.location = "<?php echo site_url("site_info?sid=".$_POST['site_id']); ?>";
 			<?php
 		}
 		?>jQuery("#record_form *").attr("disabled", false);<?php

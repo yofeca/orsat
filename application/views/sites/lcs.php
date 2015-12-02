@@ -38,7 +38,7 @@
 				'<?php echo site_url(); echo $controller; ?>/ajax_'+target,
 				{ 'data': formdata }
 			).done(function(){
-				self.location = "<?php echo site_url(); echo $controller; ?>/edit/<?php echo $site_id; ?>";
+				//self.location = "<?php echo site_url(); echo $controller; ?>/edit/<?php echo $site_id; ?>";
 			});
 		},
 		edit: function(){

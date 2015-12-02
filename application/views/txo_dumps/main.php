@@ -1,34 +1,3 @@
-<script>
-	function deleteRecord(co_id){
-		if(confirm("Are you sure you want to delete this record?")){
-			formdata = "id="+co_id;
-			$.ajax({
-				url: "<?php echo site_url(); echo $controller ?>/ajax_delete/"+co_id,
-				type: "POST",
-				data: formdata,
-				dataType: "script",
-				success: function(){
-					$("#tr"+co_id).fadeOut(200);
-					self.location = "<?php echo site_url(); echo $controller ?>";
-				}
-			});
-		}
-	}
-	function searchRecord(){
-		if($('#sfilter').val().length>0){
-			self.location = "<?php echo site_url(); ?><?php echo $controller; ?>/search/?search="+$("#search").val()+"&filter="+$("#sfilter").val();
-		}else{
-			$('.chosen-single').addClass('err-filter').focus();
-		}
-	}
-	function addRecord(){
-		self.location = "<?php echo site_url(); echo $controller; ?>/add";
-	}
-	function uploadTxo(){
-		self.location = "<?php echo site_url(); echo $controller; ?>/add_txo_files";
-	}
-</script>
-
 <div class="row">
 	<div class="container-fluid">
 		<div class="panel panel-default">
@@ -45,14 +14,14 @@
 							<select name='filter' id='sfilter' class="form-control chosen-select" data-placeholder="Choose a Filter">
 								<option></option>
 								<option value="filename">Filename</option>
-								<option value="date">Date</option>	
+								<option value="date">Process Date</option>	
 								<!--option value="sample_type_id">Sample ID</option-->	
 								<option value="sample_name">Sample Name</option>	
 								<option value="sample_number">Sample Number</option>	
 								<!--option value="site_id">Site ID</option-->	
 								<option value="instrument_name">Instrument Name</option>	
 								<option value="channel">Channel</option>	
-								<option value="data_acquisition_time">Data Acquisition Time</option>	
+								<option value="data_acquisition_time">Collection Date</option>	
 								<option value="cycle">Cycle</option>	
 								<option value="raw_data_file">Raw Data File</option>	
 								<option value="inst_method">Instrument Method</option>	
@@ -80,9 +49,7 @@
 		</div><!--/.panel.panel-default-->
 	</div>
 </div>
-<style>
-	#dt-wrapper th, #dt-wrapper td{ font-size: 12px; white-space: nowrap; }
-</style>
+
 <div class="row">
 	<div class="container-fluid">
 		<div class="panel panel-default" id="panel-table">
@@ -95,8 +62,8 @@
 								<!--<th>#</th>-->
 								<!--th>ID</th-->
 								<th>Filename</th>
-								<th>Data Acquisition Time</th>
-								<th>Date</th>
+								<th>Collection Date</th>
+								<th>Process Date</th>
 								<!--th>Sample ID</th-->
 								<th>Sample Name</th>
 								<th>Sample Number</th>
@@ -185,3 +152,36 @@
 		</div><!--/.panel-->
 	</div><!--/.container-fluid-->
 </div><!--/.row-->
+
+<script>
+	
+		function deleteRecord(co_id){
+			if(confirm("Are you sure you want to delete this record?")){
+				formdata = "id="+co_id;
+				$.ajax({
+					url: "<?php echo site_url(); echo $controller ?>/ajax_delete/"+co_id,
+					type: "POST",
+					data: formdata,
+					dataType: "script",
+					success: function(){
+						$("#tr"+co_id).fadeOut(200);
+						self.location = "<?php echo site_url(); echo $controller ?>";
+					}
+				});
+			}
+		}
+		function searchRecord(){
+			if($('#sfilter').val().length>0){
+				self.location = "<?php echo site_url(); ?><?php echo $controller; ?>/search/?search="+$("#search").val()+"&filter="+$("#sfilter").val();
+			}else{
+				$('.chosen-single').addClass('err-filter').focus();
+			}
+		}
+		function addRecord(){
+			self.location = "<?php echo site_url(); echo $controller; ?>/add";
+		}
+		function uploadTxo(){
+			self.location = "<?php echo site_url(); echo $controller; ?>/add_txo_files";
+		}
+	
+</script>

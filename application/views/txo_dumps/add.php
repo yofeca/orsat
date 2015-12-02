@@ -54,6 +54,11 @@ $(document).ready(function(){
 			$('.'+elem).fadeIn(400);
 		}
 	});
+
+	mask_values('.amount','td-not-detected','ND');
+	mask_values('.time','td-zero','');
+	mask_values('.area','td-zero','');
+	mask_values('.method-rt','td-zero','');
 });
 
 </script>
@@ -198,6 +203,9 @@ $(document).ready(function(){
 					<div class="panel-body">
 						<div class="col-sm-12 table-responsive">
 							<ul class="list-group">
+								<li class="list-group-item">
+									<b>ND</b> - None Detected
+								</li>
 								<li class="list-group-item">
 		                            <label class="cr-styled">
 		                            	<input type="checkbox" name="toggle-no-peaks" id="no-peak" class="toggle-row">

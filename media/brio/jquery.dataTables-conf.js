@@ -6,7 +6,17 @@ $(document).ready(function() {
 	Basic Data Table
 	************************************/
     //$('#basic-datatable').dataTable();
-	var table = $('#dt-wrapper').dataTable();
+	var table = $('#dt-wrapper').dataTable({
+        "lengthMenu": [25,50,100],
+        "stateSave": true,
+        "stateDuration": 60*60*24,
+        "order": []
+    });
+
+    $('#bt-delete-selection').click(function(){
+        alert( table.rows('tr.selected').data().length +' row(s) selected' );
+        table.row('.selected').remove().draw( false );
+    });
     /*$('#dt-wrapper tbody').on('click','tr', function(){
         console.log(table.row(this).data());
     });*/

@@ -19,7 +19,7 @@ class txo_dumps extends CI_Controller {
 		$start += 0;
 		$limit = 100;
 				
-		$sql = "SELECT * FROM `".$table."` WHERE 1 ORDER BY `data_acquisition_time` DESC LIMIT $start, $limit";
+		$sql = "SELECT * FROM `".$table."` WHERE 1 ORDER BY `date_added` DESC LIMIT $start, $limit";
 		$export_sql = md5($sql);
 		$_SESSION['export_sqls'][$export_sql] = $sql;
 		$q = $this->db->query($sql);

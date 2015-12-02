@@ -8,6 +8,7 @@ function saveRecord(approve){
 	jQuery("#savebutton").val("Saving...");
 	formdata = jQuery("#record_form").serialize();
 	jQuery("#record_form *").attr("disabled", true);
+
 	jQuery.ajax({
 		<?php
 		if($record['id']){
@@ -50,6 +51,7 @@ function deleteRecord(co_id){
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<?php
+
 					if(!$record['id']){
 						echo "Add a New Record";
 					}else{
@@ -90,11 +92,11 @@ function deleteRecord(co_id){
 											<?php
 												$t = count($networks);												
 												for($i=0; $i<$t; $i++){
-													echo '<option value="'.$networks[$i]['id'].'">'.$networks[$i]['name'].'</option>';
+													echo '<option value="'.$networks[$i]['name'].'">'.$networks[$i]['name'].'</option>';
 												}
 											?>
 										</select>
-										<input type="hidden" name="network_id">
+										<input type="hidden" name="network_name">
 									</div>
 								</div>
 								<div class="form-group">
@@ -236,6 +238,7 @@ function deleteRecord(co_id){
 
 <script>
 <?php
+
 	if($record){
 		foreach($record as $key=>$value){	
 			if(trim($value)||1){
@@ -246,5 +249,6 @@ function deleteRecord(co_id){
 		}
 	}
 	?>
-	$('select[name="network"]').val($('input[name="network_id"]').val());
+	$('select[name="network"]').val($('input[name="network_name"]').val());
+	
 </script>

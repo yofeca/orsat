@@ -61,14 +61,17 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 
 	if(! file_exists($filepath) ) return; //double check if the file really exists in directory
 
+	$csv = array_map('str_getcsv', file($filepath)); //convert csv file to array
+	$totalcsv = count($csv);
+
 	$r = fetch_txo($filepath); //fetch txo
 	
 	if(! isset($r) ){//if txo not inserted	
 	
 		$site_name = $channel = $sample_name = $data_acquisition_time='';
 		$filename = basename($filepath);
-		$csv = array_map('str_getcsv', file($filepath)); //convert csv file to array
-		$totalcsv = count($csv);
+
+		echo "inserting $txo_id - $filename";
 
 		$header_counter = 1;
 		for($i=1; $i<$totalcsv; $i++){//start of header loop array
@@ -199,19 +202,15 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 	}//end of txo not inserted
 
 	else{//if txo exists
-
-		if(! file_exists($filepath) ) return; //double check if the file really exists in directory
 		
 		$site_name = $channel = $sample_name = $data_acquisition_time='';
 		$filename = $r[0]['filename'];
 		$txo_id = $r[0]['id'];
-		$csv = array_map('str_getcsv', file($filepath)); //convert csv file to array
-		$totalcsv = count($csv);
 	
 		echo "updating $txo_id - $filename";
 
 		$header_counter = 1;
-		for($i=1; $i<$totalcsv; $i++){
+		for($i=1; $i<$totalcsv; $i++){//header loop
 			
 			$t = count($csv[$i]); $key = ""; $value = "";
 
@@ -270,17 +269,20 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 
 		$sql = str_replace(", `` = ''","",$sql); //removes unnecessary columns ex. `` = ''
 		$sql .= " WHERE `filename`='$filename'";
-
+		
 		$r = dbQuery($sql);
 		
-		
+		//delete all the components then re-add them
+		$sql = "DELETE FROM `component_values` WHERE `filename` = '" . $filename . "'";
+		$r = dbQuery($sql);
+
 		for($i=$header_counter+6; $i<$totalcsv; $i++){ //column values (PLOT A / PLOT B)
 			
 			$subtotalcsv_count = count($csv[$i]);
 			
 			if($subtotalcsv_count > 4 && (trim($csv[$i][0]) || trim($csv[$i][1]))){
 				
-				$sql = "UPDATE `component_values` SET
+				$sql = "INSERT INTO `component_values` SET
 					`peak` = '".mysql_real_escape_string(trim($csv[$i][0]))."',
 					`component_name` = '".mysql_real_escape_string(trim($csv[$i][1]))."',
 					`amount` = '".mysql_real_escape_string(trim($csv[$i][2]))."',
@@ -293,12 +295,12 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 					`channel` = '".$channel."',
 					`data_acquisition_time` = '".$data_acquisition_time."',
 					`sample_id` = '".$sample_type_id."',
-					`sample_name` = '".$sample_name."' ";
+					`sample_name` = '".$sample_name."',";
 				
 				if(isset($csv[$i][5])){
 					$sql .= "`method_rt` = '".mysql_real_escape_string(trim($csv[$i][5]))."',";
 				}
-					$sql .= "WHERE `txo_dump_id` = '".$txo_id."'";
+					$sql .= "`txo_dump_id` = '".$txo_id."'";
 				
 				$r = dbQuery($sql);
 			
@@ -308,7 +310,6 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 				if( $subtotalcsv_count > 4 ){
 					if($csv[$i][2] == "------" && $csv[$i][4] == "------"){
 						$sql = "UPDATE `txo_total_components` SET
-							`filename` = '".mysql_real_escape_string(trim($filename))."',
 							`pp_carbon` = '".mysql_real_escape_string(trim($csv[$i+1][2]))."',
 							`area` = '".mysql_real_escape_string(trim($csv[$i+1][4]))."',
 							`site_id` = '".$site_id."',
@@ -322,7 +323,7 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 							$sql .= "`method_rt` = '".mysql_real_escape_string(trim($csv[$i+1][5]))."',";
 						}
 						
-						$sql .= " `ascii_file` = '" . mysql_real_escape_string(trim($csv[$totalcsv-1][1])). "' WHERE `txo_dump_id` = '" . $txo_id . "'";
+						$sql .= " `ascii_file` = '" . mysql_real_escape_string(trim($csv[$totalcsv-1][1])). "' WHERE `txo_dump_id` = '" . $txo_id . "' OR `filename`='". $filename ."'";
 						
 						$r = dbQuery($sql);
 						break;
@@ -345,50 +346,97 @@ function parseTXO($filepath){ //filepath should be absolute path of the file
 }//End Of parseTXO();
 
 
-function get_files($path="") {
+function fetch_zip_files(){
 
-	if($path){
+	$sql = "SELECT filename FROM `files` WHERE `flag`='0' AND `type`='zip' LIMIT 1000";
+	$r = dbQuery($sql);
 
-		$dir_list = array_diff( scanDIR( $path ), array( '..' , '.' ) );
+	return $r;
 		
-		if( $dir_list ) {
-			natsort( $dir_list );
-			$sorted_list = array();
-			foreach( $dir_list as $dl ){
-				array_push( $sorted_list, $dl );
-			}
-
-			return $sorted_list;
-		} else {
-			exit( "\nError! Missing Txo.\n" );
-		}
-
-	}else{
-
-		$sql = "SELECT filename FROM `files` WHERE `flag`='0' LIMIT 500";
-		$r = dbQuery($sql);
-
-		return $r;
-		
-	}
 }//End Of get_files();
 
+function get_files($path=""){
+	if(! file_exists($path)) exit( "\nError! File or Directory does not exist.");
+
+	$sorted_list = array();
+	$dir_list = array_diff( scanDIR( $path ), array( '..' , '.' ) );
+		
+	if( $dir_list ) {
+		natsort( $dir_list );
+		
+		foreach( $dir_list as $dl ){
+			array_push( $sorted_list, $dl );
+		}
+	} else {
+		exit( "\nError! Missing Txo.\n" );
+	}
+	return $sorted_list;
+}
+
+function unzip_files($path=""){
+
+	if(! file_exists( $path ) ) exit("\nError! File or Directory does not exist.\n");
+	
+	$dir = dirname($path);
+
+	echo "\nExtracting " . basename($path);
+	$zip = new ZipArchive;
+	$res = $zip->open($path);
+	if($res === TRUE){
+		$zip->extractTo($dir);
+		$zip->close();
+		echo ' done...';
+		return unlink($path);
+	}else{
+		echo ' error...';
+	}
+}
+
+function delete_directory($path)
+{
+	$path = str_replace('.zip', '', $path);
+
+    if (is_dir($path . "\\") === true)
+    {
+    	echo $path;
+        $files = array_diff(scandir($path), array('.', '..'));
+
+        foreach ($files as $file)
+        {
+            delete_directory(realpath($path) . '/' . $file);
+        }
+
+        return rmdir($path);
+    }
+
+    else if (is_file($path) === true)
+    {
+        return unlink($path);
+    }
+
+    return false;
+}
 //$path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
 //parseTXO($path."\\"."2ABBJ18D.TX0");
 ///home/larry/public_html/txoparser/dumps
 $path = "D:\\xampp\\htdocs\\orsat\\txoparser\\dumps";
 
 // $p = get_files($path);
-$p = get_files();
-
-if($p){ //check if there are files not processed
-	$count = count($p) - 1;
-	for($i=$count; $i>=0; $i--){
-
-		if(parseTXO($path."\\".$p[$i]['filename'])){
+$files = fetch_zip_files();
+print_r($files);
+if($files){ //check if there are files not processed
+	$count = count($files);
+	for($i=0; $i<$count; $i++){
+/*		if(unzip_files($path."\\".$files[$i]['filename'])){
 			echo " - Success!\n";
 		}else{
-			echo " - Failed!.\n";
+			//echo " - Failed!.\n";
+		}*/
+
+		if(delete_directory( $path ) ){
+			echo " - Success!\n";
+		}else{
+			//echo " - Failed!.\n";
 		}
 	}
 }

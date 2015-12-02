@@ -49,9 +49,17 @@ class component_data extends CI_Model {
 		return $records;
 	}
 
-	public function fetch_network_target_components($ch="",$nid=""){
+	public function fetch_network_target_components($ch="",$nname=""){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 
+		if(!$nname) return;
+		
+		$sql ="SELECT * FROM `network` WHERE `name`='$nname' LIMIT 1";
+		$q = $this->db->query($sql);
+		$records = $q->result_array();
+
+		$nid = $records[0]['id'];
+		
 		$sql = "SELECT al.*
 		FROM `airs_list` al LEFT JOIN `tceq` t ON al.id=t.airs_list_id
 		LEFT JOIN `network_target_components` ntc ON t.airs_list_id=ntc.airs_list_id WHERE t.channel='$ch' AND ntc.network_id='$nid' ORDER BY ntc.sort";
@@ -100,11 +108,6 @@ class component_data extends CI_Model {
 	}
 
 	public function fetch_rts_summary($date,$site_id){
-		/*$sql = "SELECT td.id, td.filename, td.data_acquisition_time, td.channel, ttc.pp_carbon, ttc.area, ttc.method_rt
-		FROM `txo_dumps` td
-		LEFT JOIN `txo_total_components` ttc ON td.id=ttc.txo_dump_id
-		WHERE DATE_FORMAT(td.data_acquisition_time, '%Y-%m-%d') = DATE_FORMAT('$date','%Y-%m-%d') AND td.site_id = '$site_id'
-		ORDER BY td.data_acquisition_time";*/
 		
 		$rts_summary = array();
 

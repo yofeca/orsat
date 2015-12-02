@@ -24,10 +24,11 @@ class site_info extends CI_Controller {
 		//$lcs = $this->fetch_lcs($id);
 		//$cvs = $this->fetch_cvs($id);
 		$site_info = $this->site_data->fetch_info($id);
+
 		$data = array();
 		$data['site_info'] = $site_info;
-		$data['target_components_a'] = $this->component_data->fetch_network_target_components('A',$site_info['network_id']);
-		$data['target_components_b'] = $this->component_data->fetch_network_target_components('B',$site_info['network_id']);
+		$data['target_components_a'] = $this->component_data->fetch_network_target_components('A',$site_info['network_name']);
+		$data['target_components_b'] = $this->component_data->fetch_network_target_components('B',$site_info['network_name']);
 		$data['lcs'] = $this->site_data->fetch_site_standards($id,'LCS');
 		$data['cvs'] = $this->site_data->fetch_site_standards($id,'CVS');
 		$data['rts'] = $this->site_data->fetch_site_standards($id,'RTS');

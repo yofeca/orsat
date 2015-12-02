@@ -23,9 +23,14 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo site_url("media/js/jquery.alerts-1.1/jquery.alerts.css"); ?>" media="screen" />
 	
 	<link rel="stylesheet" type="text/css" href="<?php echo site_url("media/custom.css?_=".time()); ?>" media="screen" />
+
+	<!-- DataTables -->
+	<link rel="stylesheet" type="text/css" href="<?php echo site_url("media/brio/jquery.dataTables.css"); ?>" media="screen" />
+	<link rel="stylesheet" type="text/css" href="<?php echo site_url("media/brio/select.dataTables.min.css"); ?>" media="screen" />
 	
-	<!-- Chart.js -->
-	<script src="<?php echo site_url('media/chartsjs/Chart.js'); ?>"></script>
+	<!-- Chart -->
+	<script src="<?php echo site_url('media/highcharts/js/highcharts.js'); ?>"></script>
+	<script src="<?php echo site_url('media/highcharts/js/modules/exporting.js'); ?>"></script>
 
 	<script src="<?php echo site_url('media/bootstrap-list-filter/bootstrap-list-filter.src.js'); ?>"></script>
 	    
@@ -306,10 +311,14 @@
 	    
 		<!-- Data Table -->
 	    <script src="<?php echo site_url('media/brio/jquery.dataTables.js'); ?>"></script>
+	    <script src="<?php echo site_url('media/brio/dataTables.select.min.js'); ?>"></script>
+
 	    <script src="<?php echo site_url('media/brio/DT_bootstrap.js'); ?>"></script>
 	    <script src="<?php echo site_url('media/brio/jquery.dataTables-conf.js'); ?>"></script>
 
 	    <script type="text/javascript" src="<?php echo site_url("media/custom.js?_=".time()); ?>"></script>
 	    <script src="<?php echo site_url('media/fp_custom.js'); ?>"></script>
+
+	    <script src="<?php echo site_url('media/plugins/jquery.doubleScroll.js'); ?>"></script>
 	</body>
 </html>

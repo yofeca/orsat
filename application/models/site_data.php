@@ -8,12 +8,21 @@ class site_data extends CI_Model {
 		$this->load->database();
     }
 
-    public function fetch_sites(){
-    	$sql = "SELECT id, instrument_name FROM `sites`";
-    	$q = $this->db->query($sql);
-		$records = $q->result_array();
+    public function fetch_sites($id=""){
 
-		return $records;
+    	if(!$id){
+	    	$sql = "SELECT id, instrument_name FROM `sites`";
+	    	$q = $this->db->query($sql);
+			$records = $q->result_array();
+
+			return $records;
+		}else{
+			$sql = "SELECT id, instrument_name FROM `sites` WHERE id='$id' LIMIT 1";
+	    	$q = $this->db->query($sql);
+			$records = $q->result_array();
+
+			return $records[0];
+		}
     }
 
     public function fetch_info($id=""){
@@ -131,7 +140,7 @@ class site_data extends CI_Model {
 	public function fetch_coa($type){
 		$this->user_validation->validate(__CLASS__, __FUNCTION__);
 
-		$sql = "SELECT * FROM `coa` WHERE `type`='$type'";
+		$sql = "SELECT * FROM `coa` WHERE `type`='$type' ORDER BY `date_added` DESC";
 		$q = $this->db->query($sql);
 		$records = $q->result_array();
 		
